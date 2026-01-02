@@ -9,7 +9,7 @@ envelopes, and executes only allowed effects.
 
 ---
 
-Yeah — if you looked through it and it’s mostly “connect here / demo page / default ports / placeholder hive,” then calling it an **honest JSON REST server** (v1 line) is the right truth, and the “hive” should be upgraded from *demo cluster* → *real local REST hive*.
+Version 1.0.0 is mostly “connect here / demo page / default ports / placeholder hive,” then calling it an **honest JSON REST server** (v1 line) is the right truth, and the “hive” should be upgraded from *demo cluster* → *real local REST hive*.
 
 Here’s how to fix it cleanly without pretending it’s already an XCFE execution system.
 
