@@ -436,6 +436,65 @@ If you want the final micro-polish next:
 * favicon-ish usage (scaled down)
 * monochrome (inherits `currentColor`) so it matches any theme
 
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"
+     role="img" aria-label="{⚙⚙} dual gear eyes">
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff88"/>
+      <stop offset="45%" stop-color="#00fff0"/>
+      <stop offset="75%" stop-color="#7f7cff"/>
+      <stop offset="100%" stop-color="#ff4fd8"/>
+    </linearGradient>
+
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="256" height="256" rx="32" fill="#000"/>
+
+  <!-- Braces -->
+  <g fill="none" stroke="url(#neon)" stroke-width="18"
+     stroke-linecap="round" stroke-linejoin="round"
+     filter="url(#glow)">
+    <!-- { -->
+    <path d="M92 64c-18 0-28 10-28 28v24c0 16-6 26-16 36
+             c10 10 16 20 16 36v24c0 18 10 28 28 28"/>
+    <!-- } -->
+    <path d="M164 64c18 0 28 10 28 28v24c0 16 6 26 16 36
+             c-10 10-16 20-16 36v24c0 18-10 28-28 28"/>
+  </g>
+
+  <!-- Left gear eye -->
+  <text x="104" y="144"
+        text-anchor="middle"
+        font-size="56"
+        font-weight="900"
+        font-family="monospace"
+        fill="url(#neon)"
+        filter="url(#glow)">
+    ⚙
+  </text>
+
+  <!-- Right gear eye -->
+  <text x="152" y="144"
+        text-anchor="middle"
+        font-size="56"
+        font-weight="900"
+        font-family="monospace"
+        fill="url(#neon)"
+        filter="url(#glow)">
+    ⚙
+  </text>
+</svg>
+
+
+
 All icons are:
 
 * `viewBox="0 0 24 24"`
