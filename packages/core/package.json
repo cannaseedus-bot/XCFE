@@ -1,0 +1,34 @@
+{
+  "name": "@xcfe/core",
+  "version": "1.0.0",
+  "description": "XCFE Core - Deterministic language + proof kernel with no side effects",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./errors": "./src/errors.js",
+    "./parse": "./src/parse.js",
+    "./lower": "./src/lower.js",
+    "./canonical": "./src/canonical.js",
+    "./hash": "./src/hash.js",
+    "./verify": "./src/verify.js",
+    "./proof": "./src/proof.js",
+    "./keyload": "./src/keyload.js"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "eslint src/"
+  },
+  "keywords": ["xcfe", "xjson", "deterministic", "proof", "verification", "kernel"],
+  "author": "XCFE Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "src/",
+    "schemas/",
+    "test-vectors/"
+  ]
+}

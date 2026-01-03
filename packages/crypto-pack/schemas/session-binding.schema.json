@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xcfe://schema/session-binding/v1",
+  "title": "XCFE Session Binding Schema v1",
+  "description": "Schema for XCFE session binding proofs",
+  "type": "object",
+  "required": ["@type", "@version", "session_id", "kid", "pub", "alg"],
+  "properties": {
+    "@type": { "const": "xcfe.session_binding" },
+    "@version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "session_id": {
+      "type": "string",
+      "pattern": "^sid_[a-f0-9]{32}$"
+    },
+    "kid": {
+      "type": "string",
+      "pattern": "^xcfe://kid/"
+    },
+    "pub": {
+      "type": "string",
+      "pattern": "^base64:"
+    },
+    "alg": {
+      "type": "string",
+      "enum": ["ed25519"]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^xcfe\\.[a-z_]+\\.v[0-9]+$"
+      }
+    },
+    "issued_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "bind_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "server_sig": {
+      "type": "string",
+      "pattern": "^base64:"
+    }
+  }
+}

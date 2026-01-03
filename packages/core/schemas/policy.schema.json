@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xcfe://schema/policy/v1",
+  "title": "XCFE Policy Schema v1",
+  "description": "Schema for XCFE policy documents",
+  "type": "object",
+  "required": ["@type", "@version"],
+  "properties": {
+    "@type": { "const": "xcfe.policy" },
+    "@version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "grants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["verb"],
+        "properties": {
+          "verb": { "type": "string", "pattern": "^@[A-Za-z0-9._-]+$" },
+          "allow": { "type": "boolean", "default": true },
+          "constraints": { "type": "object" }
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "max_exec_depth": { "type": "integer", "minimum": 1 },
+        "max_loop_iterations": { "type": "integer", "minimum": 1 },
+        "max_memory_bytes": { "type": "integer", "minimum": 1 },
+        "timeout_ms": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "default_deny": { "type": "boolean", "default": true }
+  }
+}

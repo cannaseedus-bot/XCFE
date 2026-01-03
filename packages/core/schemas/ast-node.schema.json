@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xcfe://schema/ast-node/v1",
+  "title": "XCFE AST Node Schema v1",
+  "description": "Schema for XCFE AST nodes",
+  "definitions": {
+    "document": {
+      "type": "object",
+      "required": ["type", "version", "body"],
+      "properties": {
+        "type": { "const": "document" },
+        "version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+        "body": { "type": "array", "items": { "$ref": "#/definitions/exec" } },
+        "meta": { "type": "object" }
+      }
+    },
+    "exec": {
+      "type": "object",
+      "required": ["type", "verb", "params", "children"],
+      "properties": {
+        "type": { "const": "exec" },
+        "verb": { "type": "string", "pattern": "^@[A-Za-z0-9._-]+$" },
+        "id": { "type": ["string", "null"] },
+        "determinism": { "type": ["string", "null"], "enum": ["pure", "io", "nondet", null] },
+        "capability": { "type": ["string", "null"] },
+        "async": { "type": ["boolean", "null"] },
+        "params": { "type": "array", "items": { "$ref": "#/definitions/param" } },
+        "children": { "type": "array", "items": { "oneOf": [{ "$ref": "#/definitions/label" }, { "$ref": "#/definitions/exec" }] } },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "param": {
+      "type": "object",
+      "required": ["type", "key", "value"],
+      "properties": {
+        "type": { "const": "param" },
+        "key": { "type": "string" },
+        "value": { "$ref": "#/definitions/value" },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "label": {
+      "type": "object",
+      "required": ["type", "name", "children"],
+      "properties": {
+        "type": { "const": "label" },
+        "name": { "type": "string", "enum": ["then", "else", "do", "case", "default", "on_error", "on_complete"] },
+        "children": { "type": "array", "items": { "$ref": "#/definitions/exec" } },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "value": {
+      "oneOf": [
+        { "$ref": "#/definitions/literal" },
+        { "$ref": "#/definitions/expr" },
+        { "$ref": "#/definitions/array" },
+        { "$ref": "#/definitions/object" }
+      ]
+    },
+    "literal": {
+      "type": "object",
+      "required": ["type", "kind", "value"],
+      "properties": {
+        "type": { "const": "literal" },
+        "kind": { "type": "string", "enum": ["string", "number", "boolean", "null"] },
+        "value": {},
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "expr": {
+      "type": "object",
+      "required": ["type", "body"],
+      "properties": {
+        "type": { "const": "expr" },
+        "body": { "type": "string" },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "array": {
+      "type": "object",
+      "required": ["type", "items"],
+      "properties": {
+        "type": { "const": "array" },
+        "items": { "type": "array", "items": { "$ref": "#/definitions/value" } },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "object": {
+      "type": "object",
+      "required": ["type", "entries"],
+      "properties": {
+        "type": { "const": "object" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/objectEntry" } },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "objectEntry": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": { "type": "string" },
+        "value": { "$ref": "#/definitions/value" }
+      }
+    }
+  },
+  "$ref": "#/definitions/document"
+}

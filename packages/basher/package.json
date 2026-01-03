@@ -1,0 +1,28 @@
+{
+  "name": "@xcfe/basher",
+  "version": "1.0.0",
+  "description": "XCFE Basher - Structured XCFE command layer (NOT a shell)",
+  "type": "module",
+  "bin": {
+    "basher": "./bin/basher.js"
+  },
+  "main": "src/basher.js",
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@xcfe/core": "1.0.0",
+    "@xcfe/cli": "1.0.0"
+  },
+  "keywords": ["xcfe", "xjson", "basher", "command", "shell"],
+  "author": "XCFE Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/"
+  ]
+}

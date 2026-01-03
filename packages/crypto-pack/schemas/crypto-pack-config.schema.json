@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xcfe://schema/crypto-pack-config/v1",
+  "title": "XCFE Crypto Pack Config Schema v1",
+  "description": "Configuration schema for XCFE crypto pack",
+  "type": "object",
+  "required": ["@type", "@version"],
+  "properties": {
+    "@type": { "const": "xcfe.crypto_pack_config" },
+    "@version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "signing": {
+      "type": "object",
+      "properties": {
+        "algorithm": { "type": "string", "enum": ["ed25519"] },
+        "key_source": {
+          "type": "string",
+          "enum": ["env", "file", "session", "hardware"]
+        }
+      }
+    },
+    "session_binding": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["securolink", "oauth.google", "oauth.github"]
+          }
+        }
+      }
+    },
+    "scx_chain": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "storage": {
+          "type": "string",
+          "enum": ["memory", "file", "database"]
+        }
+      }
+    }
+  }
+}

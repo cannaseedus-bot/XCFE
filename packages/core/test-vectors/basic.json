@@ -1,0 +1,67 @@
+{
+  "@type": "xcfe.test-vector-pack",
+  "@version": "1.0.0",
+  "description": "Basic XCFE test vectors for deterministic hashing",
+  "vectors": [
+    {
+      "id": "tv-001",
+      "description": "Simple exec with no params",
+      "input": "@log",
+      "expected_ast_type": "document",
+      "expected_verb": "@log"
+    },
+    {
+      "id": "tv-002",
+      "description": "Exec with string param",
+      "input": "@log\n  message: \"hello\"",
+      "expected_ast_type": "document",
+      "expected_verb": "@log",
+      "expected_param_count": 1
+    },
+    {
+      "id": "tv-003",
+      "description": "Exec with number param",
+      "input": "@set\n  value: 42",
+      "expected_ast_type": "document",
+      "expected_verb": "@set",
+      "expected_param_count": 1
+    },
+    {
+      "id": "tv-004",
+      "description": "Exec with boolean param",
+      "input": "@set\n  enabled: true",
+      "expected_ast_type": "document",
+      "expected_verb": "@set",
+      "expected_param_count": 1
+    },
+    {
+      "id": "tv-005",
+      "description": "Exec with expression param",
+      "input": "@set\n  result: {{ ctx.value * 2 }}",
+      "expected_ast_type": "document",
+      "expected_verb": "@set",
+      "expected_param_count": 1
+    },
+    {
+      "id": "tv-006",
+      "description": "Conditional with then/else labels",
+      "input": "@if\n  condition: {{ ctx.ready }}\n  then:\n    @log\n      message: \"yes\"\n  else:\n    @log\n      message: \"no\"",
+      "expected_ast_type": "document",
+      "expected_verb": "@if"
+    },
+    {
+      "id": "tv-007",
+      "description": "Array param",
+      "input": "@http.post\n  tags:\n    - \"alpha\"\n    - \"beta\"\n    - \"gamma\"",
+      "expected_ast_type": "document",
+      "expected_verb": "@http.post"
+    },
+    {
+      "id": "tv-008",
+      "description": "Object param",
+      "input": "@http.get\n  headers:\n    Content-Type: \"application/json\"\n    Accept: \"application/json\"",
+      "expected_ast_type": "document",
+      "expected_verb": "@http.get"
+    }
+  ]
+}
