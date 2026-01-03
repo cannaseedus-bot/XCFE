@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XJSON HIVE-NET Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050608;
+      color: #e8f5ff;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+    .meta {
+      font-size: 11px;
+      color: #8f9bb7;
+      margin-bottom: 12px;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    button {
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid #43f2b0;
+      background: #05070c;
+      color: #43f2b0;
+      padding: 2px 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #071017;
+    }
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      background: #05070c;
+      color: #e8f5ff;
+      border-radius: 6px;
+      border: 1px solid #333;
+      padding: 8px;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 12px;
+      resize: vertical;
+      margin-bottom: 8px;
+    }
+    #log pre {
+      background: #05070c;
+      border-radius: 6px;
+      border: 1px solid #333;
+      padding: 8px;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      margin: 0 0 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>XJSON HIVE-NET Console</h1>
+  <div class="meta">
+    The <strong>network list</strong> (servers.json) is the route map. Each entry is a base URL
+    exposing a single REST endpoint: <code>/xjson/run</code>. This console pings each server
+    and lets you send XJSON programs to any node — or broadcast to all of them.
+  </div>
+
+  <h3>Servers</h3>
+  <ul id="servers">
+    <li>(loading…)</li>
+  </ul>
+
+  <h3>XJSON Program</h3>
+  <textarea id="jsonProgram">
+// Example program:
+{ 
+  "from": "hive-net",
+  "receivedAt": "$now",
+  "payload": "$msg"
+}
+  </textarea>
+
+  <h3>Context</h3>
+  <textarea id="jsonContext">
+// Example context:
+{
+  "now": Date.now(),
+  "msg": "Hello from HIVE-NET"
+}
+  </textarea>
+
+  <button id="broadcastBtn">Broadcast to all online servers</button>
+
+  <h3>Log</h3>
+  <div id="log"></div>
+
+  <script type="module" src="./hive-net.js"></script>
+</body>
+</html>

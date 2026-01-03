@@ -1,0 +1,5 @@
+XJSON.APP / XJSON.LIVE — USER AGREEMENT
+Version 1.0 — Updated 2025
+
+By installing or using the XJSON Server Runtime (“XJSON Runtime”), you agree to the following:
+...

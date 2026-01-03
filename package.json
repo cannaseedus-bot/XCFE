@@ -1,0 +1,37 @@
+{
+  "name": "@xjson/xjson-server",
+  "version": "2.0.0",
+  "description": "XCFE-compatible execution server for XJSON programs with proof, policy, and session binding enforcement.",
+  "license": "MIT",
+
+  "type": "module",
+  "main": "server.js",
+
+  "keywords": [
+    "xcfe",
+    "xjson",
+    "execution-server",
+    "proof-verification",
+    "policy-enforcement",
+    "runtime"
+  ],
+
+  "dependencies": {
+    "@xcfe/core": "^1.0.0"
+  },
+
+  "engines": {
+    "node": ">=18"
+  },
+
+  "files": [
+    "server.js",
+    "hive-cluster.js",
+    "json-api-router.js",
+    "README.md"
+  ],
+
+  "exports": {
+    ".": "./server.js"
+  }
+}
