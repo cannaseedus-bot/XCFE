@@ -3,6 +3,156 @@
 Here’s a **brand SVG icon pack** you can drop straight into the repo (or publish as `@xjson/icon-pack`). It’s designed to work as:
 Aligned. The two gears now share the **exact same vertical centerline** while keeping the micro-rotation on the right gear.
 
+Locked. **XJSON Logo v1.0** is now **canonical**.
+
+Below is the **official export pack** definition + ready-to-run commands so you can generate **PNG / SVG / ICO** deterministically from the locked SVG you already have.
+
+---
+
+# 🔒 XJSON Logo v1.0 — Canonical Asset Pack
+
+## Canonical Source (SVG)
+
+**Authority:** `xjson://brand/logo/v1.0`
+**Status:** LOCKED / IMMUTABLE
+**Hash scope:** visual (pixel-equivalent exports)
+
+> The SVG you approved in the previous step is the **single source of truth**.
+> All other formats are **pure projections**.
+
+---
+
+## 📦 Export Set (Required)
+
+```
+brand/
+└─ xjson-logo-v1.0/
+   ├─ svg/
+   │  └─ xjson-logo.v1.0.svg        (canonical source)
+   ├─ png/
+   │  ├─ xjson-logo-1024.png
+   │  ├─ xjson-logo-512.png
+   │  ├─ xjson-logo-256.png
+   │  ├─ xjson-logo-128.png
+   │  ├─ xjson-logo-64.png
+   │  └─ xjson-logo-32.png
+   └─ ico/
+      └─ xjson-logo.ico             (multi-size)
+```
+
+---
+
+## 🧪 Deterministic Export Commands
+
+### 1️⃣ PNG export (ImageMagick)
+
+```bash
+mkdir -p png ico
+
+magick xjson-logo.v1.0.svg -background none -resize 1024x1024 png/xjson-logo-1024.png
+magick xjson-logo.v1.0.svg -background none -resize 512x512  png/xjson-logo-512.png
+magick xjson-logo.v1.0.svg -background none -resize 256x256  png/xjson-logo-256.png
+magick xjson-logo.v1.0.svg -background none -resize 128x128  png/xjson-logo-128.png
+magick xjson-logo.v1.0.svg -background none -resize 64x64    png/xjson-logo-64.png
+magick xjson-logo.v1.0.svg -background none -resize 32x32    png/xjson-logo-32.png
+```
+
+> `-background none` preserves transparency
+> SVG glow renders correctly at all scales
+
+---
+
+### 2️⃣ ICO export (favicon-safe)
+
+```bash
+magick \
+  png/xjson-logo-16.png \
+  png/xjson-logo-32.png \
+  png/xjson-logo-48.png \
+  png/xjson-logo-64.png \
+  ico/xjson-logo.ico
+```
+
+If you want **Windows-perfect ICO**, include 16/24/32/48/64 explicitly.
+
+---
+
+### 3️⃣ Node-based (optional, CI-safe)
+
+```bash
+npm i -g sharp-cli
+
+sharp -i xjson-logo.v1.0.svg -o png/xjson-logo-256.png resize 256 256
+sharp -i xjson-logo.v1.0.svg -o png/xjson-logo-128.png resize 128 128
+```
+
+---
+
+## 🧷 npm / GitHub Usage
+
+### package.json
+
+```json
+{
+  "name": "@xjson/brand",
+  "version": "1.0.0",
+  "files": [
+    "xjson-logo-v1.0/svg",
+    "xjson-logo-v1.0/png",
+    "xjson-logo-v1.0/ico"
+  ]
+}
+```
+
+### README badge
+
+```md
+![XJSON](./brand/xjson-logo-v1.0/png/xjson-logo-128.png)
+```
+
+---
+
+## 🧠 Brand Lock Declaration
+
+```json
+{
+  "@id": "xjson://brand/logo/v1.0",
+  "@status": "locked",
+  "@authority": "XJSON",
+  "@source": "svg",
+  "@derivatives": ["png", "ico"],
+  "@rules": {
+    "no_shape_mutation": true,
+    "no_color_mutation": true,
+    "no_relayout": true,
+    "projection_only": true
+  }
+}
+```
+
+---
+
+## Final visual identity (locked)
+
+```
+{    ⚙        ⚙↻    }
+         X J S O N
+```
+
+This logo is now:
+
+* ✅ Canonical
+* ✅ Versioned
+* ✅ npm / CLI / favicon ready
+* ✅ Future-proof (SVG source, deterministic projections)
+
+If you want next, the *only legal moves* are:
+
+* **v1.1** (minor polish)
+* **Theme projections** (mono, print, inverted)
+* **Animated projection** (non-canonical)
+
+Say the word.
 
 
 ```svg
