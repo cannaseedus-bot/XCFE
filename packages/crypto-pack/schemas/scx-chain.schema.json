@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xcfe://schema/scx-chain/v1",
+  "title": "XCFE SCX Chain Schema v1",
+  "description": "Schema for XCFE Sequential Cryptographic eXchange (SCX) chains",
+  "definitions": {
+    "chain": {
+      "type": "object",
+      "required": ["@type", "@version", "chain_id", "entries"],
+      "properties": {
+        "@type": { "const": "xcfe.scx_chain" },
+        "@version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+        "chain_id": {
+          "type": "string",
+          "pattern": "^scx_[a-f0-9]{32}$"
+        },
+        "created_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "entries": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/entry" }
+        },
+        "head_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": ["@type", "index", "prev_hash", "payload_hash", "entry_hash", "timestamp_utc"],
+      "properties": {
+        "@type": { "const": "xcfe.scx_chain_entry" },
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "prev_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "payload_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "entry_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "description": "sha256(prev_hash + payload_hash + index + timestamp)"
+        },
+        "timestamp_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "signer": {
+          "type": "object",
+          "properties": {
+            "kid": { "type": "string" },
+            "sig": { "type": "string", "pattern": "^base64:" }
+          }
+        }
+      }
+    }
+  },
+  "$ref": "#/definitions/chain"
+}

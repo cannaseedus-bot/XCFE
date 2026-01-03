@@ -1,0 +1,21 @@
+{
+  "name": "@xcfe/crypto-pack",
+  "version": "1.0.0",
+  "description": "XCFE Crypto Pack - Optional cryptographic extensions for XCFE",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "eslint ."
+  },
+  "keywords": ["xcfe", "xjson", "crypto", "signing", "scx", "session"],
+  "author": "XCFE Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "schemas/"
+  ]
+}

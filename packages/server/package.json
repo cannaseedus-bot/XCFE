@@ -1,0 +1,26 @@
+{
+  "name": "@xcfe/server",
+  "version": "1.0.0",
+  "description": "XCFE Server - Authoritative verification + execution gateway",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "start:auth": "node src/auth_adapter.js",
+    "test": "node --test test/",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@xcfe/core": "1.0.0"
+  },
+  "keywords": ["xcfe", "xjson", "server", "verification", "gateway"],
+  "author": "XCFE Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "src/",
+    "api/"
+  ]
+}

@@ -3427,7 +3427,484 @@ xcfe sign app.xjson \
 * Wrapped key → **deterministic local signing**
 * Proof envelope → **verifiable anywhere**
 
-This is **enterprise-grade**, **offline-capable**, and **zero trust friendly** — without ever breaking XCFE’s determinism.
+This is **enterprise-grade**, **offline-capable**, and **zero trust friendly** — without ever breaking XCFE's determinism.
 
+---
 
+# Extended Documentation
+
+## Installation Guide
+
+### Prerequisites
+
+- Node.js 18.0.0 or higher
+- pnpm 9.0.0 or higher (recommended) or npm
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/cannaseedus-bot/XJSON.git
+cd XJSON
+
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Run tests
+pnpm test
+```
+
+### Installing Individual Packages
+
+```bash
+# Core kernel (required)
+npm install @xcfe/core
+
+# CLI tools
+npm install -g @xcfe/cli
+
+# Server (optional)
+npm install @xcfe/server
+
+# Basher (optional)
+npm install -g @xcfe/basher
+
+# Crypto pack (optional)
+npm install @xcfe/crypto-pack
+```
+
+---
+
+## API Reference
+
+### @xcfe/core
+
+The core kernel provides the following exports:
+
+```javascript
+import {
+  // Parsing
+  parseSurface,         // Parse XJSON text to surface IR
+  isExecLine,           // Check if line is exec statement
+  isLabelLine,          // Check if line is label
+  parseParamLine,       // Parse parameter line
+
+  // AST
+  lowerToAst,           // Lower surface IR to canonical AST
+  assignPaths,          // Assign canonical paths to AST nodes
+
+  // Canonicalization
+  canonicalize,         // Ensure AST is in canonical form
+
+  // Hashing
+  hashAst,              // Compute deterministic hash of AST
+  canonicalJsonBytes,   // Convert object to canonical JSON bytes
+
+  // Verification
+  verifyAst,            // Verify AST structure
+  verifyPolicy,         // Verify policy document
+  verifyProof,          // Verify proof envelope
+
+  // Proof
+  buildBindPayloadV1,   // Build bind payload for signing
+  computeBindHashV1,    // Compute bind hash
+  verifyEnvelopeProofV1,// Verify complete proof envelope
+
+  // Key handling
+  loadSigningSeed,      // Load signing seed from handle
+
+  // Errors
+  XCFEError             // Error namespace
+} from "@xcfe/core";
+```
+
+### @xcfe/cli
+
+CLI commands available after installation:
+
+| Command | Description |
+|---------|-------------|
+| `xcfe parse <file>` | Parse XJSON to surface IR |
+| `xcfe ast <file>` | Lower to canonical AST |
+| `xcfe hash <file>` | Compute deterministic hash |
+| `xcfe verify <file>` | Verify AST structure |
+| `xcfe sign <file>` | Sign and emit proof envelope |
+| `xcfe prove <envelope>` | Verify proof envelope |
+| `xcfe keygen` | Generate ed25519 keypair |
+| `xcfe pub` | Derive public key from seed |
+| `xcfe auth exchange` | Exchange SecuroLink token |
+| `xcfe auth google` | Bind Google OAuth |
+| `xcfe key register` | Register key with server |
+| `xcfe key provision` | Provision wrapped key |
+| `xcfe test` | Run test vectors |
+| `xcfe help` | Show help |
+
+### @xcfe/server
+
+REST API endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/xcfe/health` | GET | Health check |
+| `/xcfe/verify` | POST | Verify AST + optional policy |
+| `/xcfe/hash` | POST | Compute program hash |
+| `/xcfe/proof/verify` | POST | Verify proof envelope |
+| `/xcfe/execute` | POST | Execute verified program |
+
+Auth adapter endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/auth/securolink/exchange` | POST | Exchange SecuroLink token |
+| `/auth/oauth/google/verify` | POST | Verify Google OAuth |
+| `/keys/register` | POST | Register public key |
+| `/keys/provision` | POST | Provision wrapped key |
+
+---
+
+## Configuration
+
+### Environment Variables
+
+#### Server
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `XCFE_PORT` | Main server port | 8080 |
+| `XCFE_AUTH_PORT` | Auth adapter port | 8787 |
+| `XCFE_SECUROLINK_SECRET` | SecuroLink HMAC secret | (required) |
+| `XCFE_GOOGLE_CLIENT_ID` | Google OAuth client ID | (required) |
+| `XCFE_SERVER_ED25519_SEED` | Server signing key | (required) |
+| `XCFE_SESSION_TTL_MS` | Session TTL in ms | 3600000 |
+
+#### CLI Key Handles
+
+| Format | Description | Example |
+|--------|-------------|---------|
+| `env://path` | Environment variable | `env://device/master` → `XCFE_ENV_DEVICE_MASTER` |
+| `file:path` | File path | `file:/path/to/key` |
+| `base64:...` | Inline base64 | `base64:ABC...` |
+| `hex:...` | Inline hex | `hex:0123...` |
+| `sessionwrap:path` | Wrapped session key | `sessionwrap:wrapped.key.json` |
+
+---
+
+## Security Considerations
+
+### Threat Model
+
+XCFE is designed with the following security properties:
+
+1. **Determinism**: Same input always produces same output
+2. **Verifiability**: All programs can be verified against policy
+3. **Non-repudiation**: Signed proofs cannot be forged
+4. **Isolation**: No eval, no I/O in core kernel
+
+### Best Practices
+
+1. **Key Management**
+   - Never commit seeds to version control
+   - Use environment variables or secure key stores
+   - Rotate keys periodically
+   - Use hardware security modules in production
+
+2. **Policy Enforcement**
+   - Always use default-deny policies
+   - Explicitly grant only required verbs
+   - Set compute limits to prevent DoS
+
+3. **Proof Verification**
+   - Always verify proofs before execution
+   - Check expiration times
+   - Validate signer identity
+
+4. **Session Security**
+   - Use short-lived sessions
+   - Bind keys to sessions
+   - Validate OAuth tokens server-side
+
+---
+
+## Error Codes
+
+### Parse Errors (E_PARSE_*)
+
+| Code | Description |
+|------|-------------|
+| `E_PARSE_INPUT` | Invalid input type |
+| `E_PARSE_TAB` | Tabs are forbidden |
+| `E_PARSE_INDENT` | Invalid indentation |
+| `E_PARSE_LINE` | Unrecognized statement |
+
+### Lower Errors (E_LOWER_*)
+
+| Code | Description |
+|------|-------------|
+| `E_LOWER_INPUT` | Invalid surface IR |
+| `E_LABEL_PARENT` | Label not under exec |
+| `E_PARAM_PARENT` | Param not under exec |
+| `E_EXEC_PARENT` | Invalid exec parent |
+
+### Verification Errors (E_AST_*, E_POLICY_*, E_PROOF_*)
+
+| Code | Description |
+|------|-------------|
+| `E_AST` | Invalid AST structure |
+| `E_POLICY` | Invalid policy |
+| `E_PROOF` | Invalid proof envelope |
+| `E_PROOF_SIG_INVALID` | Signature verification failed |
+| `E_PROOF_EXPIRED` | Proof has expired |
+
+### Key Errors (E_KEY_*)
+
+| Code | Description |
+|------|-------------|
+| `E_KEY_ENV` | Missing environment variable |
+| `E_KEY_LEN` | Invalid key length |
+| `E_KEY_FORMAT` | Invalid key format |
+| `E_KEY_SESSION` | Session required |
+
+---
+
+## Examples
+
+### Basic Program Verification
+
+```javascript
+import { parseSurface, lowerToAst, verifyAst, hashAst } from "@xcfe/core";
+
+const source = `
+@http.get
+  url: "https://api.example.com/data"
+  then:
+    @log
+      message: {{ response.body }}
+`;
+
+const surface = parseSurface(source);
+const ast = lowerToAst(surface);
+verifyAst(ast);
+const hash = hashAst(ast);
+
+console.log("Program hash:", hash);
+```
+
+### Creating and Verifying Proofs
+
+```javascript
+import {
+  parseSurface,
+  lowerToAst,
+  canonicalize,
+  hashAst,
+  buildBindPayloadV1,
+  computeBindHashV1,
+  verifyEnvelopeProofV1
+} from "@xcfe/core";
+import crypto from "crypto";
+
+// Create proof envelope
+const ast = canonicalize(lowerToAst(parseSurface(source)));
+const ast_hash = hashAst(ast);
+
+// ... build envelope and sign ...
+
+// Verify proof
+verifyEnvelopeProofV1(envelope);
+console.log("Proof valid!");
+```
+
+### Policy-Gated Execution
+
+```javascript
+const policy = {
+  "@type": "xcfe.policy",
+  "@version": "1.0.0",
+  grants: [
+    { verb: "@http.get", allow: true },
+    { verb: "@log", allow: true }
+  ],
+  limits: {
+    max_exec_depth: 10,
+    timeout_ms: 5000
+  },
+  default_deny: true
+};
+```
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"E_PARSE_TAB: Tabs are forbidden"**
+   - Use spaces only for indentation
+   - Configure your editor to use spaces
+
+2. **"E_PARSE_INDENT: Indent must be multiple of 2 spaces"**
+   - XCFE uses 2-space indentation
+   - Check for mixed indentation
+
+3. **"E_PROOF_SIG_INVALID: Signature verification failed"**
+   - Ensure the correct key is being used
+   - Check that the envelope hasn't been modified
+
+4. **"E_KEY_ENV: Missing env var"**
+   - Set the required environment variable
+   - Check the key handle format
+
+---
+
+## Contributing
+
+### Development Setup
+
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/XJSON.git
+cd XJSON
+
+# Install dependencies
+pnpm install
+
+# Run tests
+pnpm test
+
+# Run linter
+pnpm lint
+```
+
+### Code Style
+
+- ESM modules only
+- No dependencies in @xcfe/core (Node built-ins only)
+- Deterministic code only
+- Comprehensive JSDoc comments
+
+### Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch
+3. Make changes with tests
+4. Run the full test suite
+5. Submit PR with clear description
+
+---
+
+# Future Plans
+
+## Version 1.x Roadmap
+
+### v1.1 - Enhanced Verification
+- [ ] Full JSON Schema validation for AST
+- [ ] Extended test vector pack
+- [ ] Performance benchmarks
+- [ ] WASM build for browser
+
+### v1.2 - Execution Engine
+- [ ] Deterministic runtime execution
+- [ ] Standard library implementation
+- [ ] Async verb support (@spawn, @await, @join)
+- [ ] Compute limit enforcement
+
+### v1.3 - Advanced Crypto
+- [ ] SCX chain full implementation
+- [ ] Multi-signature support
+- [ ] Key rotation protocols
+- [ ] Hardware key integration
+
+## Version 2.x Vision
+
+### v2.0 - Language Evolution
+- [ ] Extended label set
+- [ ] User-defined verbs
+- [ ] Module system
+- [ ] Import/export statements
+
+### v2.1 - Enterprise Features
+- [ ] Distributed execution
+- [ ] Audit logging
+- [ ] Compliance reporting
+- [ ] Role-based access control
+
+### v2.2 - Ecosystem Growth
+- [ ] VS Code extension
+- [ ] Language server protocol
+- [ ] Package registry
+- [ ] CI/CD integrations
+
+## Long-term Vision
+
+### Platform Integrations
+- [ ] GitHub Actions support
+- [ ] Kubernetes operators
+- [ ] Terraform provider
+- [ ] AWS/GCP/Azure adapters
+
+### Runtime Targets
+- [ ] Native binary compilation
+- [ ] Embedded system support
+- [ ] Edge compute optimization
+- [ ] IoT device runtime
+
+### Tooling
+- [ ] Visual debugger
+- [ ] Proof explorer
+- [ ] Policy designer
+- [ ] Migration tools
+
+### Community
+- [ ] Official documentation site
+- [ ] Tutorial series
+- [ ] Certification program
+- [ ] Community plugins
+
+---
+
+## Governance
+
+XCFE follows a conservative governance model:
+
+1. **Frozen Specs**: Once frozen, specs are immutable forever
+2. **Semantic Versioning**: Strict adherence to semver
+3. **Backward Compatibility**: New kernels must accept old versions
+4. **Transparent Process**: All changes require spec + schema + tests
+
+---
+
+## License
+
+XCFE is released under the MIT License.
+
+```
+MIT License
+
+Copyright (c) 2024 XCFE Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+**XCFE npm v1 — Complete Implementation**
 

@@ -1,0 +1,21 @@
+{
+  "name": "xcfe",
+  "private": true,
+  "version": "1.0.0",
+  "description": "XCFE (eXtensible Code Flow Engine) - Deterministic language + proof kernel",
+  "workspaces": ["packages/*"],
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cannaseedus-bot/XJSON"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

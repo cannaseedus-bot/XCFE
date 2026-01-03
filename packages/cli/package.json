@@ -1,0 +1,27 @@
+{
+  "name": "@xcfe/cli",
+  "version": "1.0.0",
+  "description": "XCFE CLI - Human + CI tooling for XCFE programs",
+  "type": "module",
+  "bin": {
+    "xcfe": "./bin/xcfe.js"
+  },
+  "main": "src/router.js",
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@xcfe/core": "1.0.0"
+  },
+  "keywords": ["xcfe", "xjson", "cli", "verification", "signing"],
+  "author": "XCFE Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/"
+  ]
+}

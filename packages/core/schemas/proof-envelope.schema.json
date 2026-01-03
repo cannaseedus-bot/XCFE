@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xcfe://schema/proof-envelope/v1",
+  "title": "XCFE Proof Envelope Schema v1",
+  "description": "Schema for XCFE proof/signature envelopes",
+  "type": "object",
+  "required": ["@type", "@version", "program", "signer", "binding", "signature"],
+  "properties": {
+    "@type": { "const": "xcfe.proof.envelope" },
+    "@version": { "type": "string", "pattern": "^1\\.0\\.0$" },
+    "program": {
+      "type": "object",
+      "required": ["program_hash"],
+      "properties": {
+        "program_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "ast_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "properties": {
+        "stdlib": {
+          "type": "object",
+          "properties": { "hash": { "type": "string" } }
+        },
+        "packs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "hash": { "type": "string" } }
+          }
+        },
+        "policy": {
+          "type": "object",
+          "properties": { "hash": { "type": "string" } }
+        }
+      }
+    },
+    "intent": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["approve", "publish", "execute", "attest"] },
+        "scope": { "type": "string", "enum": ["program", "program+snapshot"] }
+      }
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "issued_utc": { "type": ["string", "null"], "format": "date-time" },
+        "expires_utc": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "signer": {
+      "type": "object",
+      "required": ["alg", "kid"],
+      "properties": {
+        "alg": { "type": "string", "enum": ["ed25519"] },
+        "kid": { "type": "string" },
+        "pub": { "type": "string", "pattern": "^base64:" }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "required": ["bind_hash"],
+      "properties": {
+        "bind_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["sig"],
+      "properties": {
+        "sig": { "type": "string", "pattern": "^base64:" }
+      }
+    }
+  }
+}
