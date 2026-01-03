@@ -1,270 +1,273 @@
-# @xjson/xjson-server
+<p align="center">
+  <img src="xjson-logo.svg" alt="XJSON Logo" width="128" height="128">
+</p>
 
-## Version 2.x — XCFE Execution Server
+<h1 align="center">XJSON / XCFE</h1>
 
-This package is the **reference HTTP execution host** for **XCFE v1** programs.
+<p align="center">
+  <strong>Deterministic, Verifiable, Proof-Based Program Execution</strong>
+</p>
 
-It accepts XJSON/XCFE input, verifies canonical ASTs, enforces policy and proof
-envelopes, and executes only allowed effects.
-
----
-
-Version 1.0.0 is mostly “connect here / demo page / default ports / placeholder hive,” then calling it an **honest JSON REST server** (v1 line) is the right truth, and the “hive” should be upgraded from *demo cluster* → *real local REST hive*.
-
-Here’s how to fix it cleanly without pretending it’s already an XCFE execution system.
-
----
-
-## 1) Keep the old line honest: **v1 = JSON REST SERVER (real, useful)**
-
-### v1 scope (make it actually good)
-
-* **Static JSON API**
-
-  * `GET /health`
-  * `GET /capabilities`
-  * `GET /db` / `GET /db/:path`
-  * `POST /db/:path` (write/patch)
-* **KQL/KPI adapters optional** (behind flags, off by default)
-* **No execution semantics**
-
-  * `@` is treated as data, not “run this”
-* **No demo HTML in core**
-
-  * if you want a demo, ship it in `/examples`, never in runtime path
-
-**Deliverable:** publish `@xjson/xjson-server@1.1.0` as “JSON REST SERVER” with the above endpoints + proper docs.
+<p align="center">
+  <a href="#installation">Installation</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#packages">Packages</a> •
+  <a href="#documentation">Documentation</a> •
+  <a href="#license">License</a>
+</p>
 
 ---
 
-## 2) Upgrade the “hive” into a real thing: **hive-cluster.js becomes a local REST hive**
+## What is XJSON/XCFE?
 
-Right now it sounds like it’s a shell. Make it real by giving it 4 non-negotiable invariants:
+**XJSON** is a structured, indentation-based language for defining executable workflows. **XCFE** (eXtensible Code Flow Engine) is the deterministic runtime and proof system that powers it.
 
-### Hive invariants (minimum viable “real”)
+Key properties:
 
-1. **Deterministic node identity**
+- **Deterministic**: Same input → same AST → same bytes → same hash
+- **Verifiable**: All programs can be verified against policy before execution
+- **Proof-Based**: Ed25519 signed proof envelopes for non-repudiation
+- **Policy-Enforced**: Default-deny execution with explicit capability grants
 
-   * `node_id = hash(machine_fingerprint + salt)` (or user-provided)
-2. **Discovery that actually works**
+## Example
 
-   * `GET /hive/nodes` returns live nodes
-   * seed list support: `--seed http://127.0.0.1:PORT`
-3. **Consistent routing**
+```xjson
+@http.get
+  url: "https://api.example.com/data"
+  headers:
+    Authorization: "Bearer {{ ctx.token }}"
+  then:
+    @log
+      message: "Received: {{ response.status }}"
+    @set
+      result: {{ response.body }}
+  on_error:
+    @log
+      message: "Error: {{ error.message }}"
+```
 
-   * consistent-hash ring (or rendezvous hashing)
-   * `route(key)` → node endpoint
-4. **Health + quorum**
+## Installation
 
-   * heartbeats + TTL eviction
-   * `GET /hive/health` returns quorum + node liveness
+```bash
+# Install CLI globally
+npm install -g @xcfe/cli
 
-### Core endpoints (v1-compatible)
+# Or install packages individually
+npm install @xcfe/core      # Core kernel
+npm install @xcfe/server    # Verification server
+npm install @xcfe/basher    # Structured command layer
+npm install @xcfe/crypto-pack  # Crypto extensions
+```
 
-* `GET /hive/health`
-* `GET /hive/nodes`
-* `POST /hive/join`
-* `POST /hive/leave`
-* `POST /hive/heartbeat`
-* `POST /hive/route` `{ "key": "..." } -> { "node": ... }`
+## Quick Start
 
-That makes it a legitimate “local REST server hive” for *any* program, exactly like you said.
+### Parse and Verify a Program
 
----
+```bash
+# Parse to surface IR
+xcfe parse program.xjson
 
-## 3) v2 should not land until it passes “not-theater” gates
+# Lower to canonical AST
+xcfe ast program.xjson
 
-If we’re going to ship **XCFE Execution Server** as v2, it must meet runtime-grade acceptance tests, not “example wiring.”
+# Compute deterministic hash
+xcfe hash program.xjson
 
-### v2 gates (must pass)
+# Verify structure
+xcfe verify program.xjson --policy policy.json
+```
 
-* **Parse/lower → canonical AST → byte-stable hash**
-* **Policy check happens before any effect**
-* **Proof bind_hash matches canonical serialization**
-* **ed25519 verification works end-to-end**
-* **effects are allowlisted + audited**
-* **no “demo HTML” in server runtime**
+### Sign and Prove
 
-If it can’t do those yet, don’t call it v2 execution. Keep improving v1 + hive first.
+```bash
+# Generate a keypair
+xcfe keygen --out device.key.json
 
----
+# Export seed to environment
+export XCFE_ENV_DEVICE_MASTER=$(jq -r .seed device.key.json)
 
-## 4) How to publish without breaking anyone (npm dist-tags)
+# Sign a program
+xcfe sign program.xjson \
+  --policy policy.json \
+  --kid xcfe://kid/device \
+  --key env://device/master \
+  --out proof.envelope.json
 
-You can keep the *same package name* and still be brutally clear:
+# Verify proof
+xcfe prove proof.envelope.json
+```
 
-* Publish:
+### Run Verification Server
 
-  * `1.1.0` as the upgraded **JSON REST SERVER**
-  * `2.0.0` later as **XCFE Execution Server**
-* Use dist-tags:
+```bash
+# Start the server
+node packages/server/src/server.js
 
-  * `latest` → points to `1.1.0` until v2 is real
-  * `xcfe` → points to experimental `2.0.0-alpha.x` until it’s solid
-  * or flip later when v2 is legit
+# Health check
+curl http://localhost:8080/xcfe/health
 
-This prevents “people install latest and get an execution server that’s actually a demo.”
+# Verify a program
+curl -X POST http://localhost:8080/xcfe/verify \
+  -H "Content-Type: application/json" \
+  -d '{"source": "@log\n  message: \"hello\""}'
+```
 
----
+## Packages
 
-## 5) Concrete next commit plan (no placeholders)
+| Package | Description |
+|---------|-------------|
+| `@xcfe/core` | Deterministic kernel: parser, AST, hashing, verification, proofs |
+| `@xcfe/cli` | Command-line tools: parse, ast, hash, verify, sign, prove, keygen |
+| `@xcfe/server` | HTTP verification gateway with auth adapter |
+| `@xcfe/basher` | Structured XCFE command layer (not a shell) |
+| `@xcfe/crypto-pack` | Session binding, SCX chains, crypto schemas |
 
-**Commit A (v1.1.0):**
+## Architecture
 
-* remove demo UI from runtime path
-* implement `/health`, `/capabilities`, `/db` routes
-* implement real `hive-cluster.js` endpoints + hashing + TTL
-* add minimal CLI:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        XCFE Ecosystem                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐   ┌─────────────┐   ┌─────────────────────┐   │
+│  │  @xcfe/cli  │   │@xcfe/server │   │  @xcfe/crypto-pack  │   │
+│  │             │   │             │   │                     │   │
+│  │ • parse     │   │ • /verify   │   │ • session-binding   │   │
+│  │ • ast       │   │ • /hash     │   │ • scx-chain         │   │
+│  │ • hash      │   │ • /execute  │   │ • key-wrap          │   │
+│  │ • verify    │   │ • /proof    │   │                     │   │
+│  │ • sign      │   │             │   │                     │   │
+│  └──────┬──────┘   └──────┬──────┘   └──────────┬──────────┘   │
+│         │                 │                     │               │
+│         └────────────┬────┴─────────────────────┘               │
+│                      │                                          │
+│              ┌───────▼───────┐                                  │
+│              │  @xcfe/core   │                                  │
+│              │               │                                  │
+│              │ • parseSurface│                                  │
+│              │ • lowerToAst  │                                  │
+│              │ • canonicalize│                                  │
+│              │ • hashAst     │                                  │
+│              │ • verifyProof │                                  │
+│              │ • buildBind   │                                  │
+│              └───────────────┘                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-  * `xjson-server start --port`
-  * `xjson-server hive --port --seed ...`
-  * `xjson-server nodes`
+## Core Concepts
 
-**Commit B (v2 alpha branch only):**
+### Programs
 
-* add `@xcfe/core` dependency
-* add `/xcfe/verify`, `/xcfe/execute` behind `--xcfe`
-* require proofs/policy/sessionbinding in strict mode
+XJSON programs are structured as exec statements (`@verb`) with parameters and control flow labels:
 
----
----
+```xjson
+@if
+  condition: {{ ctx.ready }}
+  then:
+    @log
+      message: "Ready!"
+  else:
+    @log
+      message: "Not ready"
+```
 
-# 🔢 Versioning Outcome
+### Policy
 
-### 🔒 Old Line (Preserved)
-
-**`@xjson/xjson-server@1.x`**
-
-**Officially defined as:**
-
-> **JSON REST SERVER**
-> A generic HTTP server for JSON/XJSON payload routing, validation, and transport.
-
-It:
-
-* parses JSON
-* exposes REST routes
-* MAY accept XJSON-shaped data
-* **does not** claim execution authority
-* **does not** implement XCFE semantics
-
-This is **not deprecated**, it is **reclassified**.
-
-Users who want a JSON API server:
-
-* stay on `1.x`
-* nothing breaks
-* no pressure
-
----
-
-### 🚀 New Line (Authoritative)
-
-**`@xjson/xjson-server@2.0.0`**
-
-**Officially defined as:**
-
-> **XCFE Execution Server**
-> A proof-aware, policy-enforced execution host for XCFE/XJSON programs.
-
-This is a **semantic upgrade**, not a patch.
-
----
-
-# 🧭 Naming Clarity (Critical)
-
-You’re doing something very important here:
-
-| Version | What it really is     | What you now call it      |
-| ------- | --------------------- | ------------------------- |
-| `1.x`   | JSON over HTTP        | **JSON REST SERVER**      |
-| `2.x`   | Language runtime host | **XCFE Execution Server** |
-
-No theater. No ambiguity. No bait-and-switch.
-
----
-
-# 📦 npm Metadata (Exact Changes)
-
-## `package.json`
+Policies control what verbs a program can use:
 
 ```json
 {
-  "name": "@xjson/xjson-server",
-  "version": "2.0.0",
-  "description": "XCFE-compatible execution server for XJSON programs with proof, policy, and session binding enforcement.",
-  "keywords": [
-    "xcfe",
-    "xjson",
-    "execution-server",
-    "proof-verification",
-    "policy-enforcement",
-    "runtime"
-  ]
+  "@type": "xcfe.policy",
+  "@version": "1.0.0",
+  "grants": [
+    { "verb": "@http.get", "allow": true },
+    { "verb": "@log", "allow": true }
+  ],
+  "limits": {
+    "max_exec_depth": 10,
+    "timeout_ms": 5000
+  },
+  "default_deny": true
 }
 ```
 
----
+### Proof Envelopes
 
-## README.md — Opening Section (Exact Wording)
+Proof envelopes bind programs to signatures:
 
-```md
-# @xjson/xjson-server
-
-## Version 2.x — XCFE Execution Server
-
-This package is the **reference HTTP execution host** for **XCFE v1** programs.
-
-It accepts XJSON/XCFE input, verifies canonical ASTs, enforces policy and proof
-envelopes, and executes only allowed effects.
-
----
-
-## Version 1.x — JSON REST Server (Legacy)
-
-Version 1.x remains available and supported as a **JSON REST server**.
-It provides transport, routing, and basic validation for JSON/XJSON-shaped data,
-but does **not** implement XCFE execution semantics.
-
-If you only need a JSON API server, stay on `@xjson/xjson-server@1.x`.
+```json
+{
+  "@type": "xcfe.proof.envelope",
+  "@version": "1.0.0",
+  "program": {
+    "program_hash": "sha256:...",
+    "ast_hash": "sha256:..."
+  },
+  "signer": {
+    "alg": "ed25519",
+    "kid": "xcfe://kid/device",
+    "pub": "base64:..."
+  },
+  "binding": {
+    "bind_hash": "sha256:..."
+  },
+  "signature": {
+    "sig": "base64:..."
+  }
+}
 ```
 
-This is honest, respectful, and professional.
+## Version History
 
----
+### Version 2.x — XCFE Execution Server
 
-# 🧠 Why This Is the Right Call (No Ego, Just Reality)
+The current version is the **reference HTTP execution host** for **XCFE v1** programs. It accepts XJSON/XCFE input, verifies canonical ASTs, enforces policy and proof envelopes, and executes only allowed effects.
 
-You correctly identified something most projects refuse to admit:
+### Version 1.x — JSON REST Server (Legacy)
 
-> **“XJSON without execution law is just JSON with costumes.”**
+Version 1.x remains available as a **JSON REST server**. It provides transport, routing, and basic validation for JSON/XJSON-shaped data, but does **not** implement XCFE execution semantics. If you only need a JSON API server, stay on `@xjson/xjson-server@1.x`.
 
-By versioning:
+## Documentation
 
-* you don’t erase history
-* you don’t lie about capabilities
-* you don’t trap users
+- [NPM.md](NPM.md) - Complete npm package documentation, API reference, and future plans
+- [XJSON.md](XJSON.md) - XJSON language specification
+- [BRAND.md](BRAND.md) - Brand guidelines and assets
 
-Instead, you:
+## Security
 
-* **separate transport from execution**
-* **separate syntax from law**
-* **separate tooling from authority**
+XCFE is designed with security as a core principle:
 
-That’s how *languages* grow up.
+- **No eval**: Programs are parsed, not evaluated as code
+- **No I/O in core**: The kernel has no side effects
+- **Policy enforcement**: Default-deny with explicit grants
+- **Proof verification**: Ed25519 signatures on canonical hashes
+- **Session binding**: Optional OAuth/SecuroLink integration
 
----
+Report security issues to the maintainers privately.
 
-# 🧩 Ecosystem Shape (Now Crystal Clear)
+## Contributing
 
+```bash
+# Clone the repository
+git clone https://github.com/cannaseedus-bot/XJSON.git
+cd XJSON
+
+# Install dependencies
+pnpm install
+
+# Run tests
+pnpm test
 ```
-@xcfe/core          → law, AST, proof, policy (authoritative)
-@xjson/xjson-server → execution host (v2)
-@xjson/xjson-server@1.x → JSON REST server (legacy)
-xcfe CLI            → authoring, signing, verification
-```
 
-Each piece does **one thing** and does it **correctly**.
+See [NPM.md](NPM.md#contributing) for detailed contribution guidelines.
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
+<p align="center">
+  <sub>Built with precision. Verified by design.</sub>
+</p>
