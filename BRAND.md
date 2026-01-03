@@ -494,6 +494,206 @@ If you want the final micro-polish next:
 </svg>
 
 
+Perfect — here’s a **black-background + neon-gradient SVG brand pack** that keeps the same icon geometry but upgrades the *visual identity* to **cyber / terminal / XCFE-grade**.
+
+Design goals met:
+
+* 🖤 true black background
+* 🌈 neon gradient stroke (cyan → violet → magenta)
+* ⚡ glow effect (SVG filter, no CSS required)
+* 📦 still single-file SVGs (README / npm safe)
+* 🧬 deterministic geometry (icons remain identical)
+
+You can ship these as **`brand/neon/`**.
+
+---
+
+# 🎨 Shared Neon Definitions (IMPORTANT)
+
+Each SVG includes:
+
+* `linearGradient id="neon"`
+* `filter id="glow"`
+* black background `<rect>`
+
+You can tweak colors once and batch-replace.
+
+**Canonical neon gradient (XCFE):**
+
+* `#00fff0` (cyan)
+* `#7f7cff` (violet)
+* `#ff4fd8` (magenta)
+
+---
+
+## 1️⃣ `xjson-neon.svg`
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00fff0"/>
+      <stop offset="50%" stop-color="#7f7cff"/>
+      <stop offset="100%" stop-color="#ff4fd8"/>
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- black background -->
+  <rect width="24" height="24" fill="#000"/>
+
+  <g stroke="url(#neon)" stroke-width="2" fill="none"
+     stroke-linecap="round" stroke-linejoin="round"
+     filter="url(#glow)">
+    <path d="M4 7v10a2 2 0 0 0 2 2"/>
+    <path d="M20 7v10a2 2 0 0 1-2 2"/>
+    <path d="M9 8l6 8"/>
+    <path d="M15 8l-6 8"/>
+    <path d="M8 6h8"/>
+    <path d="M8 18h8"/>
+  </g>
+</svg>
+```
+
+---
+
+## 2️⃣ `xcfe-neon.svg` (execution core)
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00fff0"/>
+      <stop offset="50%" stop-color="#7f7cff"/>
+      <stop offset="100%" stop-color="#ff4fd8"/>
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="24" height="24" fill="#000"/>
+
+  <g stroke="url(#neon)" stroke-width="2" fill="none"
+     stroke-linecap="round" stroke-linejoin="round"
+     filter="url(#glow)">
+    <circle cx="12" cy="12" r="4.5"/>
+    <path d="M12 3v3"/>
+    <path d="M12 18v3"/>
+    <path d="M3 12h3"/>
+    <path d="M18 12h3"/>
+    <path d="M7.5 7.5l2 2"/>
+    <path d="M16.5 7.5l-2 2"/>
+    <path d="M14.5 14.5l2 2"/>
+    <path d="M9.5 14.5l-2 2"/>
+  </g>
+</svg>
+```
+
+---
+
+## 3️⃣ `hive-neon.svg`
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00fff0"/>
+      <stop offset="100%" stop-color="#ff4fd8"/>
+    </linearGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="24" height="24" fill="#000"/>
+
+  <g stroke="url(#neon)" stroke-width="2" fill="none"
+     stroke-linecap="round" stroke-linejoin="round"
+     filter="url(#glow)">
+    <circle cx="6" cy="12" r="2"/>
+    <circle cx="18" cy="8" r="2"/>
+    <circle cx="18" cy="16" r="2"/>
+    <path d="M8 12h6"/>
+    <path d="M16 9.2l-2.5 1.6"/>
+    <path d="M16 14.8l-2.5-1.6"/>
+  </g>
+</svg>
+```
+
+---
+
+## 4️⃣ `proof-neon.svg`
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00fff0"/>
+      <stop offset="100%" stop-color="#7f7cff"/>
+    </linearGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="24" height="24" fill="#000"/>
+
+  <g stroke="url(#neon)" stroke-width="2" fill="none"
+     stroke-linecap="round" stroke-linejoin="round"
+     filter="url(#glow)">
+    <path d="M7 3h7l3 3v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
+    <path d="M14 3v3h3"/>
+    <path d="M8 13l2 2 5-5"/>
+  </g>
+</svg>
+```
+
+---
+
+## 🔥 Usage Notes
+
+### README.md
+
+```md
+<img src="brand/neon/xcfe-neon.svg" width="28" />
+```
+
+### CLI banner (node)
+
+```js
+console.log("\x1b[38;2;0;255;240mXCFE\x1b[0m");
+```
+
+### Web / Dashboard
+
+* Works on **pure black**
+* No CSS required
+* Scales cleanly to 16px → 256px
+
+---
 
 All icons are:
 
