@@ -3,13 +3,7 @@
 Here’s a **brand SVG icon pack** you can drop straight into the repo (or publish as `@xjson/icon-pack`). It’s designed to work as:
 Aligned. The two gears now share the **exact same vertical centerline** while keeping the micro-rotation on the right gear.
 
-### What I fixed (only this)
 
-* 👀 **Unified baseline:** both gears are centered on **y = 126**
-* 🔄 **Kept** the ~1.5° rotation on the right gear
-* ❌ No changes to sizes, padding, glow, text, or braces
-
-Here’s the **corrected SVG**:
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg"
