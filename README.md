@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="xjson-logo.svg" alt="XJSON Logo" width="128" height="128">
+  <img src="xjson-logo.svg" alt="XJSON Logo" width="228" height="228">
 </p>
 
 <h1 align="center">XJSON / XCFE</h1>
