@@ -1,7 +1,204 @@
 
 
 Here’s a **brand SVG icon pack** you can drop straight into the repo (or publish as `@xjson/icon-pack`). It’s designed to work as:
+Aligned. The two gears now share the **exact same vertical centerline** while keeping the micro-rotation on the right gear.
 
+### What I fixed (only this)
+
+* 👀 **Unified baseline:** both gears are centered on **y = 126**
+* 🔄 **Kept** the ~1.5° rotation on the right gear
+* ❌ No changes to sizes, padding, glow, text, or braces
+
+Here’s the **corrected SVG**:
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="256" height="256"
+     viewBox="0 0 256 256"
+     role="img"
+     aria-label="{⚙ XJSON ⚙} logo">
+
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff88"/>
+      <stop offset="45%" stop-color="#00fff0"/>
+      <stop offset="75%" stop-color="#7f7cff"/>
+      <stop offset="100%" stop-color="#ff4fd8"/>
+    </linearGradient>
+
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="256" height="256" rx="32" fill="#000"/>
+
+  <!-- Braces (with padding) -->
+  <g fill="none"
+     stroke="url(#neon)"
+     stroke-width="18"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     filter="url(#glow)">
+    <!-- { -->
+    <path d="M88 48
+             c-18 0-28 10-28 28v32
+             c0 16-6 26-16 36
+             c10 10 16 20 16 36v32
+             c0 18 10 28 28 28"/>
+    <!-- } -->
+    <path d="M168 48
+             c18 0 28 10 28 28v32
+             c0 16 6 26 16 36
+             c-10 10-16 20-16 36v32
+             c0 18-10 28-28 28"/>
+  </g>
+
+  <!-- Left gear eye (+5px) -->
+  <text x="92" y="126"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="61"
+        font-weight="900"
+        font-family="monospace"
+        fill="url(#neon)"
+        filter="url(#glow)">
+    ⚙
+  </text>
+
+  <!-- Right gear eye (+8px, micro-rotated ~1.5°) -->
+  <g transform="translate(164 126) rotate(1.5)">
+    <text x="0" y="0"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-size="64"
+          font-weight="900"
+          font-family="monospace"
+          fill="url(#neon)"
+          filter="url(#glow)">
+      ⚙
+    </text>
+  </g>
+
+  <!-- XJSON inside brackets -->
+  <text x="128" y="178"
+        text-anchor="middle"
+        font-size="32"
+        font-weight="800"
+        letter-spacing="3"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        fill="url(#neon)"
+        filter="url(#glow)">
+    XJSON
+  </text>
+</svg>
+```
+
+### Visual check
+
+```
+{    ⚙        ⚙↻    }
+         X J S O N
+```
+
+If you want the final micro-polish next:
+
+* counter-rotate the left gear −0.5° for tension
+* snap everything to a **favicon-perfect grid**
+* export **PNG/SVG/ICO** pack and lock as **XJSON Logo v1.0**
+
+
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="256" height="256"
+     viewBox="0 0 256 256"
+     role="img"
+     aria-label="{⚙ XJSON ⚙} logo">
+
+  <defs>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff88"/>
+      <stop offset="45%" stop-color="#00fff0"/>
+      <stop offset="75%" stop-color="#7f7cff"/>
+      <stop offset="100%" stop-color="#ff4fd8"/>
+    </linearGradient>
+
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="256" height="256" rx="32" fill="#000"/>
+
+  <!-- Braces (with padding) -->
+  <g fill="none"
+     stroke="url(#neon)"
+     stroke-width="18"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     filter="url(#glow)">
+    <!-- { -->
+    <path d="M88 48
+             c-18 0-28 10-28 28v32
+             c0 16-6 26-16 36
+             c10 10 16 20 16 36v32
+             c0 18 10 28 28 28"/>
+    <!-- } -->
+    <path d="M168 48
+             c18 0 28 10 28 28v32
+             c0 16 6 26 16 36
+             c-10 10-16 20-16 36v32
+             c0 18-10 28-28 28"/>
+  </g>
+
+  <!-- Left gear eye (+5px) -->
+  <text x="92" y="126"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="61"
+        font-weight="900"
+        font-family="monospace"
+        fill="url(#neon)"
+        filter="url(#glow)">
+    ⚙
+  </text>
+
+  <!-- Right gear eye (+8px, micro-rotated ~1.5°) -->
+  <g transform="translate(164 126) rotate(1.5)">
+    <text x="0" y="0"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-size="64"
+          font-weight="900"
+          font-family="monospace"
+          fill="url(#neon)"
+          filter="url(#glow)">
+      ⚙
+    </text>
+  </g>
+
+  <!-- XJSON inside brackets -->
+  <text x="128" y="178"
+        text-anchor="middle"
+        font-size="32"
+        font-weight="800"
+        letter-spacing="3"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        fill="url(#neon)"
+        filter="url(#glow)">
+    XJSON
+  </text>
+</svg>
 
 <svg xmlns="http://www.w3.org/2000/svg"
      width="256" height="256"
