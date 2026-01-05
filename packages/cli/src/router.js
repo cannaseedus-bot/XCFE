@@ -22,6 +22,8 @@ import { cmdKeygen } from "./keygen.js";
 import { cmdPub } from "./pub.js";
 import { cmdAuth } from "./auth.js";
 import { cmdKeyRemote } from "./key_remote.js";
+import { cmdInfer } from "./infer.js";
+import { cmdTerminal } from "./terminal.js";
 
 /**
  * Route CLI commands
@@ -40,6 +42,10 @@ export async function route(argv) {
       return cmdHash(args);
     case "verify":
       return cmdVerify(args);
+    case "infer":
+      return cmdInfer(args);
+    case "terminal":
+      return cmdTerminal(args, { route });
     case "sign":
       return cmdSign(args);
     case "prove":
@@ -174,6 +180,12 @@ Commands:
 
   xcfe verify <file.xjson> [--policy policy.json]
       Verify AST structure and optionally check policy
+
+  xcfe infer <file.xjson> [--endpoint url] [--model name] [--out file]
+      Send raw XJSON inference request (no JSON wrapping)
+
+  xcfe terminal
+      Start interactive XCFE terminal for CLI commands
 
   xcfe sign <file.xjson> --policy policy.json --kid <kid> --key <handle>
       Sign a program and emit proof envelope

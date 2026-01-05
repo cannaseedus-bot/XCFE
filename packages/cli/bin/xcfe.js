@@ -13,10 +13,12 @@
  */
 
 import { route } from "../src/router.js";
+import { printSplash } from "../src/splash.js";
 
 const argv = process.argv.slice(2);
 
 try {
+  printSplash();
   await route(argv);
 } catch (err) {
   console.error(err.message);
