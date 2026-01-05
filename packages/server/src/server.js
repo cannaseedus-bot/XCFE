@@ -15,6 +15,7 @@
  * @artifact xcfe://server/v1
  */
 
+import crypto from "crypto";
 import http from "http";
 import { URL } from "url";
 import {
@@ -45,6 +46,12 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method !== "POST") {
       return reply(res, 405, { error: "method_not_allowed" });
+    }
+
+    // Inference endpoint expects raw XJSON body, not JSON
+    if (u.pathname === "/xcfe/infer") {
+      const src = await readText(req, 2_000_000);
+      return handleInfer(res, src, u.searchParams.get("model"));
     }
 
     const body = await readJson(req);
@@ -82,6 +89,39 @@ server.listen(PORT, () => {
 /* ================================
    HANDLERS
    ================================ */
+
+/**
+ * POST /xcfe/infer
+ * Accept raw XJSON program for inference dispatch (no JSON wrapping)
+ */
+function handleInfer(res, src, model) {
+  if (!src || !String(src).trim()) {
+    return reply(res, 400, { error: "missing_source" });
+  }
+
+  if (looksLikeJson(src)) {
+    return reply(res, 400, { error: "invalid_format", message: "Expected raw XJSON body, not JSON object" });
+  }
+
+  const normalized = normalizeSource(String(src));
+
+  const ast = lowerToAst(parseSurface(normalized));
+  verifyAst(ast);
+
+  const canon = canonicalize(ast);
+  const ast_hash = hashAst(canon);
+  const program_hash = sha256Utf8(normalized);
+
+  return reply(res, 200, {
+    "@type": "xcfe.infer.response",
+    "@version": "1.0.0",
+    status: "accepted",
+    model: model || null,
+    program_hash,
+    ast_hash,
+    message: "Inference dispatch not implemented in server v1"
+  });
+}
 
 /**
  * POST /xcfe/verify
@@ -215,4 +255,36 @@ function readJson(req) {
       catch (e) { reject(e); }
     });
   });
+}
+
+function readText(req, maxBytes) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let n = 0;
+    req.on("data", c => {
+      n += c.length;
+      if (maxBytes && n > maxBytes) {
+        reject(new Error("body_too_large"));
+        req.destroy();
+        return;
+      }
+      chunks.push(c);
+    });
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+    req.on("error", reject);
+  });
+}
+
+function normalizeSource(src) {
+  return src.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
+function looksLikeJson(src) {
+  const t = src.trimStart();
+  return t.startsWith("{") || t.startsWith("[");
+}
+
+function sha256Utf8(src) {
+  const h = crypto.createHash("sha256").update(Buffer.from(src, "utf8")).digest("hex");
+  return "sha256:" + h;
 }
