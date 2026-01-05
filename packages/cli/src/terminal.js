@@ -8,6 +8,7 @@
  */
 
 import readline from "readline";
+import { printSplash } from "./splash.js";
 
 /**
  * xcfe terminal
@@ -18,6 +19,8 @@ export async function cmdTerminal(_args, { route }) {
   if (typeof route !== "function") {
     throw new Error("terminal requires router dispatch");
   }
+
+  printSplash();
 
   const rl = readline.createInterface({
     input: process.stdin,

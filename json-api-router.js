@@ -52,12 +52,36 @@ export function createJsonApiRouter(options = {}) {
             "POST /db/<path>",
             "PATCH /db/<path>",
             "DELETE /db/<path>"
-          ]
+          ],
+          infer: "POST /infer"
         },
         semantics: {
           execution: false,
           note: "This is a JSON REST server. XJSON/XCFE execution is not implemented in v1."
         }
+      });
+    }
+
+    // inference ingress (raw XJSON passthrough acknowledgment)
+    if (pathname === cfg.basePath + "/infer" && req.method === "POST") {
+      const src = pickSource(jsonBody, rawBody);
+      if (!src || !String(src).trim()) {
+        return replyJson(res, 400, { error: "missing_source" });
+      }
+
+      if (looksLikeJson(src)) {
+        return replyJson(res, 400, { error: "invalid_format", message: "Expected raw XJSON body, not JSON object" });
+      }
+
+      const normalized = normalizeSource(String(src));
+      const hash = sha256Utf8(normalized);
+
+      return replyJson(res, 200, {
+        "@type": "xjson.infer.response",
+        "@version": "1.0.0",
+        status: "accepted",
+        program_hash: hash,
+        message: "Inference dispatch not implemented in json-api-router v1"
       });
     }
 
@@ -296,4 +320,28 @@ function loadFile(path) {
   } catch {
     return {};
   }
+}
+
+function pickSource(jsonBody, rawBody) {
+  // Prefer raw body when provided (for text/x-xjson)
+  if (rawBody && rawBody.length) return rawBody.toString("utf8");
+
+  if (jsonBody && typeof jsonBody === "object" && typeof jsonBody.source === "string") {
+    return jsonBody.source;
+  }
+  return null;
+}
+
+function normalizeSource(src) {
+  return src.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
+function looksLikeJson(src) {
+  const t = src.trimStart();
+  return t.startsWith("{") || t.startsWith("[");
+}
+
+function sha256Utf8(src) {
+  const h = crypto.createHash("sha256").update(Buffer.from(src, "utf8")).digest("hex");
+  return "sha256:" + h;
 }
