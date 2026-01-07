@@ -121,6 +121,7 @@ curl -X POST http://localhost:8080/xcfe/verify \
 | `@xcfe/server` | HTTP verification gateway with auth adapter |
 | `@xcfe/basher` | Structured XCFE command layer (not a shell) |
 | `@xcfe/crypto-pack` | Session binding, SCX chains, crypto schemas |
+| `mx2gym` | Official MX2GYM definition and fold trainer format (`mx2gym/readme.md`) |
 
 ## Architecture
 
