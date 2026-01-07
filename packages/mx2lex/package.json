@@ -1,0 +1,27 @@
+{
+  "name": "@xcfe/mx2lex",
+  "version": "1.0.0",
+  "description": "MX2LEX grammar manager and compiler for XJSON",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./xjson": "./src/xjson.js",
+    "./compiler": "./src/compiler.js",
+    "./grammar": "./src/grammar.js"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "eslint src/"
+  },
+  "keywords": ["xjson", "xcfe", "grammar", "lexer", "compiler", "mx2lex"],
+  "author": "XCFE Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "src/"
+  ]
+}
