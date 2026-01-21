@@ -12,6 +12,8 @@
   <a href="#installation">Installation</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#packages">Packages</a> •
+  <a href="#repository-layout">Repository Layout</a> •
+  <a href="#inference-system">Inference System</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#license">License</a>
 </p>
@@ -112,6 +114,13 @@ curl -X POST http://localhost:8080/xcfe/verify \
   -d '{"source": "@log\n  message: \"hello\""}'
 ```
 
+### Send an Inference Request
+
+```bash
+# Send raw XJSON to the inference endpoint (no JSON wrapping)
+xcfe infer examples/hello.xjson --endpoint http://localhost:8080 --model demo
+```
+
 ## Packages
 
 | Package | Description |
@@ -121,7 +130,76 @@ curl -X POST http://localhost:8080/xcfe/verify \
 | `@xcfe/server` | HTTP verification gateway with auth adapter |
 | `@xcfe/basher` | Structured XCFE command layer (not a shell) |
 | `@xcfe/crypto-pack` | Session binding, SCX chains, crypto schemas |
+| `@xcfe/mx2lex` | MX2LEX grammar manager and compiler for XJSON |
 | `mx2gym` | Official MX2GYM definition and fold trainer format (`mx2gym/readme.md`) |
+
+## Repository Layout
+
+| Path | Purpose |
+|------|---------|
+| `packages/` | Core XCFE packages (core, cli, server, basher, crypto-pack, mx2lex). |
+| `addons/` | Inference add-ons (API proxy + local model runner). |
+| `asx/` | ASX canonicalization/ABI utilities. |
+| `docs/` | Reference docs and templates. |
+| `examples/` | Sample XJSON programs and proof artifacts. |
+| `kuhul_poc/` | Proof-of-concept experiments and notes. |
+| `mx2gym/` | MX2GYM datasets and training formats. |
+| `oracle/` | Oracle service definitions and assets. |
+| `oracle-js/` | Oracle JavaScript tooling. |
+| `tools/` | Validation helpers and scripts. |
+| `xjson-golden/` | Golden fixtures for XJSON behavior. |
+| `json-api-router.js` | JSON REST router used by the legacy server (includes `/infer` passthrough). |
+| `server.js` | Legacy JSON REST server wiring (v1 transport + hive + DB). |
+| `xjson-runtime.js` | Runtime utilities for XJSON/XCFE execution hosts. |
+| `xjson-model-schema-v1.xjson` | Canonical model schema definition. |
+| `BRAND.md` | Brand guidelines. |
+| `CONTRIBUTING.md` | Contribution workflow. |
+| `NPM.md` | Packaging + API reference. |
+| `XJSON.md` | Language specification. |
+| `LICENSE` | Project license. |
+
+## Inference System
+
+XCFE supports **inference hooks** in the language (see the `@ai.infer` section in `XJSON.md`). The inference flow is intentionally raw-source-first so the canonical XJSON bytes are preserved end-to-end.
+
+### Inference Endpoints
+
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /xcfe/infer` | Accepts raw XJSON source and returns hashes + dispatch status. |
+
+The CLI mirrors this behavior:
+
+```bash
+xcfe infer program.xjson --endpoint http://localhost:8080 --model llama3
+```
+
+### Inference Add-ons
+
+The repository includes two runnable add-ons in `addons/` to connect inference to API or local backends:
+
+#### API Add-on (proxy to remote inference API)
+
+```bash
+export API_INFER_URL="https://your-inference-gateway.example.com/xcfe/infer"
+export API_ADDON_PORT=8091
+node addons/api-addon.js
+```
+
+#### Local Model Add-on (Ollama-style default)
+
+```bash
+export LOCAL_MODEL_URL="http://localhost:11434/api/generate"
+export LOCAL_MODEL_NAME="llama3.1"
+export LOCAL_ADDON_PORT=8092
+node addons/local-model-addon.js
+```
+
+Then point `xcfe infer` at the add-on:
+
+```bash
+xcfe infer program.xjson --endpoint http://localhost:8092 --model llama3.1
+```
 
 ## Architecture
 
