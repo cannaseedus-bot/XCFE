@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "xjson://schema/model/v1",
+  "type": "object",
+  "required": [
+    "$schema",
+    "@model",
+    "@provenance",
+    "@decode",
+    "@grams",
+    "@limits"
+  ],
+  "additionalProperties": {
+    "type": ["object", "array", "string", "number", "boolean", "null"]
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "xjson://schema/model/v1"
+    },
+    "@model": {
+      "type": "object",
+      "required": ["id", "version", "format"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "format": { "type": "string", "const": "xjson-model" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "@provenance": {
+      "type": "object",
+      "required": ["model_hash", "parent_hash", "datasets", "build"],
+      "properties": {
+        "model_hash": { "type": "string", "pattern": "^sha256:" },
+        "parent_hash": { "type": ["string", "null"] },
+        "datasets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "hash", "revision"],
+            "properties": {
+              "source": { "type": "string" },
+              "hash": { "type": "string", "pattern": "^sha256:" },
+              "revision": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "build": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "@decode": {
+      "type": "object",
+      "required": ["encoding", "compression", "byte_order", "checksum", "strict"],
+      "properties": {
+        "encoding": { "type": "string", "enum": ["base64"] },
+        "compression": { "type": "string", "enum": ["zstd", "none"] },
+        "byte_order": { "type": "string", "enum": ["little"] },
+        "checksum": {
+          "type": "object",
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": { "type": "string", "enum": ["sha256"] },
+            "value": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "strict": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "@grams": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "type": "string" },
+          "scope": { "type": "string" },
+          "count": { "type": "number" },
+          "origin": { "type": "string" },
+          "formed_at": { "type": "number" },
+          "members": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "stability": { "type": "number" },
+          "entropy": { "type": "number" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "@limits": {
+      "type": "object",
+      "required": [
+        "max_payload_bytes",
+        "max_grams",
+        "max_edges",
+        "max_supgrams",
+        "max_depth"
+      ],
+      "properties": {
+        "max_payload_bytes": { "type": "number" },
+        "max_grams": { "type": "number" },
+        "max_edges": { "type": "number" },
+        "max_supgrams": { "type": "number" },
+        "max_depth": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "@proof": {
+      "type": "object",
+      "properties": {
+        "input_hash": { "type": "string" },
+        "execution": { "type": "string" },
+        "activated_grams": { "type": "array", "items": { "type": "string" } },
+        "checks": { "type": "object" },
+        "result_hash": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

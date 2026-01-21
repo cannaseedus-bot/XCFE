@@ -1,0 +1,27 @@
+{
+  "$schema": "xjson://schema/model/v1",
+  "@model": { "id": "bad-hash", "version": "1.0.0", "format": "xjson-model" },
+  "@provenance": {
+    "model_hash": "sha256:deadbeef",
+    "parent_hash": null,
+    "datasets": [],
+    "build": {}
+  },
+  "@decode": {
+    "encoding": "base64",
+    "compression": "none",
+    "byte_order": "little",
+    "checksum": { "algorithm": "sha256", "value": "00" },
+    "strict": true
+  },
+  "@grams": {
+    "g:hello": { "type": "uni", "scope": "lexical", "count": 1, "origin": "manual", "formed_at": 0 }
+  },
+  "@limits": {
+    "max_payload_bytes": 1000,
+    "max_grams": 10,
+    "max_edges": 0,
+    "max_supgrams": 0,
+    "max_depth": 4
+  }
+}

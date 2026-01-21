@@ -1,0 +1,52 @@
+{
+  "$schema": "xjson://schema/model/v1",
+  "@model": {
+    "id": "proofed",
+    "version": "1.0.0",
+    "format": "xjson-model",
+    "description": "Proof envelope example"
+  },
+  "@provenance": {
+    "parent_hash": null,
+    "datasets": [],
+    "build": {},
+    "model_hash": "sha256:99e67ec6c1270e08e18f0d09f27e4c07727cd9581705de13d8c4cd90119ad18a"
+  },
+  "@decode": {
+    "encoding": "base64",
+    "compression": "none",
+    "byte_order": "little",
+    "checksum": {
+      "algorithm": "sha256",
+      "value": "00"
+    },
+    "strict": true
+  },
+  "@grams": {
+    "g:language": {
+      "type": "uni",
+      "scope": "lexical",
+      "count": 1,
+      "origin": "manual",
+      "formed_at": 0
+    }
+  },
+  "@limits": {
+    "max_payload_bytes": 1000,
+    "max_grams": 10,
+    "max_edges": 0,
+    "max_supgrams": 0,
+    "max_depth": 4
+  },
+  "@proof": {
+    "input_hash": "sha256:deadbeef",
+    "execution": "infer",
+    "activated_grams": [
+      "g:language"
+    ],
+    "checks": {
+      "schema_valid": true
+    },
+    "result_hash": "sha256:cafebabe"
+  }
+}
