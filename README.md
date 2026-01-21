@@ -17,6 +17,127 @@ This repository defines the **language**, **execution law**, and **binary substr
 
 ---
 
+## README Sections
+
+- [Core Idea](#core-idea)
+- [What Is XJSON?](#what-is-xjson)
+- [Architecture (Canonical)](#architecture-canonical)
+- [Minimal Mental Model](#minimal-mental-model)
+- [Key Components](#key-components)
+- [Brains](#brains)
+- [Inference (No Embeddings)](#inference-no-embeddings)
+- [Training (No Gradients)](#training-no-gradients)
+- [Federation](#federation)
+- [Explicit Merge](#explicit-merge)
+- [On-Chain Brain Registry (Base L2)](#on-chain-brain-registry-base-l2)
+- [Proof-Carrying Inference](#proof-carrying-inference)
+- [Browser-Native by Design](#browser-native-by-design)
+- [Repository Scope](#repository-scope)
+- [Why This Exists](#why-this-exists)
+- [Status](#status)
+- [License](#license)
+- [Final Note](#final-note)
+- [Browser Demo (Screenshots)](#browser-demo-screenshots)
+- [CLI Reference (Full Help Output)](#cli-reference-full-help-output)
+- [Why This Matters](#why-this-matters)
+- [Decision: Rust-first, WASM-capable, Python bindings optional](#decision-rust-first-wasm-capable-python-bindings-optional)
+- [Architecture (Frozen)](#architecture-frozen)
+- [UX Model: This Is a Shell, Not Just a CLI](#ux-model-this-is-a-shell-not-just-a-cli)
+- [Terminal UI Layout (PowerShell / Git Bash)](#terminal-ui-layout-powershell-git-bash)
+- [Command Modes (Inside the Shell)](#command-modes-inside-the-shell)
+- [Rendering Strategy (Terminal)](#rendering-strategy-terminal)
+- [Browser Launch Integration](#browser-launch-integration)
+- [SCXQ2 v2 Decode (SIMD)](#scxq2-v2-decode-simd)
+- [Federation + P2P (Later Pane)](#federation-p2p-later-pane)
+- [Python & WASM Bindings (Thin)](#python-wasm-bindings-thin)
+- [Final Naming (Canonical)](#final-naming-canonical)
+- [Crate Layout](#crate-layout)
+- [`Cargo.toml` (Minimal but Real)](#cargotoml-minimal-but-real)
+- [`main.rs` — Unified Entry Point](#mainrs-unified-entry-point)
+- [CLI Dispatch Logic](#cli-dispatch-logic)
+- [CLI Args](#cli-args)
+- [Brain Core Object](#brain-core-object)
+- [WASM Export (Same Engine)](#wasm-export-same-engine)
+- [Global Interaction Model](#global-interaction-model)
+- [Global Keybindings](#global-keybindings)
+- [Pane Navigation](#pane-navigation)
+- [Explorer Pane (Graph)](#explorer-pane-graph)
+- [Inference Pane](#inference-pane)
+- [Debug / Proof Pane](#debug-proof-pane)
+- [Federation Pane](#federation-pane)
+- [Command Mode (`:`)](#command-mode-)
+- [Terminal Rendering Rules](#terminal-rendering-rules)
+- [Why This Is the Right Endgame](#why-this-is-the-right-endgame)
+- [1. `Brain::infer` — Deterministic Graph Walk](#1-braininfer-deterministic-graph-walk)
+- [2. SCXQ2 v2 SIMD Lane Decoder](#2-scxq2-v2-simd-lane-decoder)
+- [3. New Commands: API + Local Model Integration](#3-new-commands-api-local-model-integration)
+- [Why This Completes the Core](#why-this-completes-the-core)
+- [1. Provider Types (Formalized)](#1-provider-types-formalized)
+- [2. Provider Detection (Automatic + Manual)](#2-provider-detection-automatic-manual)
+- [3. Unified Provider Registry](#3-unified-provider-registry)
+- [4. Provider Invocation Semantics (Critical)](#4-provider-invocation-semantics-critical)
+- [5. Provider Interface (Rust Trait)](#5-provider-interface-rust-trait)
+- [6. Why This Is Architecturally Correct](#6-why-this-is-architecturally-correct)
+- [7. UX in the Terminal Shell](#7-ux-in-the-terminal-shell)
+- [8. This Solves the Real-World Problem](#8-this-solves-the-real-world-problem)
+- [Core Principle (Frozen)](#core-principle-frozen)
+- [1. What “Multi-Oracle Consensus” Means](#1-what-multi-oracle-consensus-means)
+- [2. Oracle Independence (Important)](#2-oracle-independence-important)
+- [3. Python Virtual Environments (Yes — but Scoped)](#3-python-virtual-environments-yes-but-scoped)
+- [4. Oracle Abstraction (Unified)](#4-oracle-abstraction-unified)
+- [5. Multi-Oracle Consensus Engine](#5-multi-oracle-consensus-engine)
+- [6. Consensus Result Object](#6-consensus-result-object)
+- [7. Ingestion Is Explicit (Never Implicit)](#7-ingestion-is-explicit-never-implicit)
+- [8. Proof-Carrying Consensus](#8-proof-carrying-consensus)
+- [9. UX in the Shell](#9-ux-in-the-shell)
+- [10. Why This Is Powerful (and Rare)](#10-why-this-is-powerful-and-rare)
+- [Final Answer (Direct)](#final-answer-direct)
+- [What “Augment-Style” Means Here (Precisely)](#what-augment-style-means-here-precisely)
+- [1. Where This Lives](#1-where-this-lives)
+- [2. Core Mental Model](#2-core-mental-model)
+- [3. Augment-Style Capabilities (Mapped to XJSON)](#3-augment-style-capabilities-mapped-to-xjson)
+- [4. Code Mode Commands](#4-code-mode-commands)
+- [5. Multi-Oracle Coding Consensus (Very Important)](#5-multi-oracle-coding-consensus-very-important)
+- [6. Python / Tooling Integration (Optional)](#6-python-tooling-integration-optional)
+- [7. TUI Keybindings (Code Mode)](#7-tui-keybindings-code-mode)
+- [8. Why This Is Better Than Augment / Cursor](#8-why-this-is-better-than-augment-cursor)
+- [9. Minimal Implementation Plan (No Overreach)](#9-minimal-implementation-plan-no-overreach)
+- [Direct Answer to Your Question](#direct-answer-to-your-question)
+- [Cursor → XJSON](#cursor-xjson)
+- [Augment → XJSON](#augment-xjson)
+- [Bottom Line](#bottom-line)
+- [Core UX Principle (Frozen)](#core-ux-principle-frozen)
+- [1. Installation Options (All Supported)](#1-installation-options-all-supported)
+- [Option A — `pip` / `uv` (Recommended for devs)](#option-a-pip-uv-recommended-for-devs)
+- [Option B — Native Binary (`install.sh` / `install.ps1`)](#option-b-native-binary-installsh-installps1)
+- [Option C — GitHub Download (Power Users)](#option-c-github-download-power-users)
+- [2. Launch Model (This Is the Key Part)](#2-launch-model-this-is-the-key-part)
+- [3. Project Context Resolution (Deterministic)](#3-project-context-resolution-deterministic)
+- [4. Model Access Rules (Very Important)](#4-model-access-rules-very-important)
+- [5. Executable Behavior (`xjson.exe`)](#5-executable-behavior-xjsonexe)
+- [6. First-Time User Experience (Zero Friction)](#6-first-time-user-experience-zero-friction)
+- [7. Why This Is the Correct UX](#7-why-this-is-the-correct-ux)
+- [8. Final Answer (Direct)](#8-final-answer-direct)
+- [Wheel Strategy (Canonical)](#wheel-strategy-canonical)
+- [Detection Rules (Frozen)](#detection-rules-frozen)
+- [Rust Implementation](#rust-implementation)
+- [Startup Integration](#startup-integration)
+- [1.1 Canonical Adapter Trait (Frozen)](#11-canonical-adapter-trait-frozen)
+- [1.2 GGUF Adapter (llama.cpp style)](#12-gguf-adapter-llamacpp-style)
+- [1.3 Ollama Adapter](#13-ollama-adapter)
+- [1.4 MLC / Phi-3 Adapter](#14-mlc-phi-3-adapter)
+- [1.5 HuggingFace / safetensors (Python venv adapter)](#15-huggingface-safetensors-python-venv-adapter)
+- [1.6 API Adapter (OpenAI / DeepSeek / Gemini)](#16-api-adapter-openai-deepseek-gemini)
+- [1.7 Adapter Selection (Auto + Manual)](#17-adapter-selection-auto-manual)
+- [2.1 Command](#21-command)
+- [2.2 What `doctor` Checks (Frozen)](#22-what-doctor-checks-frozen)
+- [2.3 Implementation](#23-implementation)
+- [2.4 Sample Output](#24-sample-output)
+- [Next (High-Value Options)](#next-high-value-options)
+- [Commands](#commands)
+- [Project Structure](#project-structure)
+- [Design Guarantees](#design-guarantees)
+
 ## Core Idea
 
 > **Intelligence is structure, not tensors.**
@@ -4301,3 +4422,99 @@ If you want to continue:
 5. Generate **public CLI docs for cli.xjson.app**
 
 Say the number — we finish it cleanly.
+
+---
+
+# XJSON CLI — Quick Start (cli.xjson.app)
+
+**Install**
+
+```bash
+# macOS / Linux
+curl -fsSL https://cli.xjson.app/install.sh | sh
+
+# Windows
+irm https://cli.xjson.app/install.ps1 | iex
+
+# Or Python
+pip install xjson
+```
+
+**Launch (from your project folder)**
+
+```bash
+xjson
+```
+
+XJSON uses the **current directory** as the project context.
+
+---
+
+## Commands
+
+### Discover & Diagnose
+
+```bash
+xjson doctor
+xjson models
+xjson models info phi3
+```
+
+### Build & Index
+
+```bash
+xjson index ./src
+xjson build ./data
+```
+
+### Inference
+
+```bash
+xjson infer "Explain entropy"
+xjson infer "Explain entropy" --via phi3
+xjson infer "Explain entropy" --via phi3,llama --consensus
+```
+
+### Consensus
+
+```bash
+xjson consensus show
+xjson ingest consensus
+```
+
+### Benchmark
+
+```bash
+xjson bench --prompt "Explain entropy" --via phi3,llama
+```
+
+### Serve (Browser Demo)
+
+```bash
+xjson serve
+```
+
+---
+
+## Project Structure
+
+```
+project/
+├── src/
+├── models/
+│   ├── phi-3-instruct/
+│   └── llama.gguf
+└── .xjson/
+    ├── brain.scxq2.bin
+    └── diffs/
+```
+
+---
+
+## Design Guarantees
+
+* Deterministic graph-walk inference
+* External models are **suggestion oracles**
+* Learning is **explicit**
+* Consensus is **inspectable**
+* Everything is **replayable**
