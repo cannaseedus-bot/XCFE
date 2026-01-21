@@ -54,7 +54,9 @@ Brain        → compiled executable artifact (brain.scxq2.bin)
 
 ---
 
-## Quick Start
+Browser demos do **not** require installation.
+
+---
 
 This section shows the **end-to-end lifecycle** of an XJSON brain:
 
@@ -75,6 +77,14 @@ Node (reference CLI):
 ```bash
 npm install -g @xjson/brain
 ```
+Brain Hash: 0x8f3c…
+Grams:      412,903
+Edges:      1,238,441
+Supgrams:   31,022
+Lanes:      GRAM | EDGE | PATH | PROOF
+```
+
+---
 
 Python (optional tooling):
 
@@ -441,6 +451,24 @@ Brains are registered **by hash only**:
 ```
 brainHash = SHA256(brain.scxq2.bin)
 ```
+brainHash = SHA256(brain.scxq2.bin)
+```
+
+The chain stores:
+
+* identity
+* authorship
+* timestamp
+* merge lineage
+
+The chain never stores cognition.
+
+The chain stores:
+
+* identity
+* authorship
+* timestamp
+* merge lineage
 
 The chain stores:
 
