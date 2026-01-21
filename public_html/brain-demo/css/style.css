@@ -1,0 +1,166 @@
+:root {
+  color-scheme: dark;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: #0b0d12;
+  color: #eef1ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.subhead {
+  margin: 0;
+  color: #9fa6c7;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8e95b6;
+}
+
+.controls input,
+.controls select {
+  background: #151826;
+  border: 1px solid #2b3148;
+  color: #eef1ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  min-width: 220px;
+}
+
+button {
+  background: #3d5afe;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.canvas {
+  background: #111524;
+  border: 1px solid #22273c;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+#brain-svg {
+  width: 100%;
+  height: auto;
+  min-height: 520px;
+  background: radial-gradient(circle at top, rgba(61, 90, 254, 0.08), transparent 60%);
+}
+
+.output pre,
+#p2pLog {
+  background: #0f1220;
+  border: 1px solid #20263b;
+  padding: 16px;
+  border-radius: 12px;
+  min-height: 120px;
+  white-space: pre-wrap;
+  color: #cbd2ff;
+}
+
+.p2p {
+  background: #111524;
+  border: 1px solid #232a44;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.p2p .row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.p2p .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.p2p textarea {
+  width: 100%;
+  background: #0f1220;
+  color: #e6e9ff;
+  border: 1px solid #242a44;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.node {
+  fill: #121624;
+  stroke: #4f5d95;
+  stroke-width: 1.5;
+}
+
+.node.active {
+  fill: #3d5afe;
+  stroke: #c6d3ff;
+}
+
+.edge {
+  opacity: 0.65;
+}
+
+.edge.local {
+  opacity: 0.8;
+}
+
+.edge.federated {
+  opacity: 0.45;
+}
+
+.heat-label {
+  fill: #cbd2ff;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.2; }
+}
+
+.edge.conflict {
+  stroke-dasharray: 6 4;
+  animation: pulse 1.4s infinite;
+}
