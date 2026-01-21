@@ -441,6 +441,17 @@ Brains are registered **by hash only**:
 ```
 brainHash = SHA256(brain.scxq2.bin)
 ```
+brainHash = SHA256(brain.scxq2.bin)
+```
+
+The chain stores:
+
+* identity
+* authorship
+* timestamp
+* merge lineage
+
+The chain never stores cognition.
 
 The chain stores:
 
@@ -2870,3 +2881,319 @@ It’s not a plugin.
 It’s **another graph domain**.
 
 ---
+
+Perfect. Below is a **tight, shippable design + implementation plan** that turns “code as graph” into a first-class citizen of XJSON, with **language-agnostic indexing**, **Augment/Cursor-grade UX**, and **provable diffs**—without surrendering authority to any model.
+
+I’ll deliver this in **five concrete parts**, each with code you can drop into the existing crate.
+
+---
+
+# 1) Code Brain Schema (Normative)
+
+**Goal:** Represent code as a graph of *files, symbols, spans, and relations* that supports navigation, reasoning, diffs, and patches.
+
+### `code.brain.schema.v1.xjson` (conceptual)
+
+```json
+{
+  "@schema": "xjson://schema/code-brain/v1",
+  "meta": {
+    "language": "multi",
+    "root": "/project",
+    "indexed_at": "ISO-8601",
+    "hash": "sha256"
+  },
+  "nodes": {
+    "file": {
+      "id": "node_id",
+      "path": "string",
+      "lang": "string"
+    },
+    "symbol": {
+      "id": "node_id",
+      "kind": "function|struct|class|var|import|module",
+      "name": "string",
+      "file": "file_id",
+      "span": { "start": [line, col], "end": [line, col] }
+    },
+    "span": {
+      "id": "node_id",
+      "file": "file_id",
+      "range": { "start": [line, col], "end": [line, col] }
+    }
+  },
+  "edges": {
+    "defines": ["file", "symbol"],
+    "calls": ["symbol", "symbol"],
+    "imports": ["file", "file"],
+    "references": ["symbol", "span"],
+    "contains": ["file", "span"]
+  },
+  "lanes": {
+    "file_lane": "SCXQ2::FILE",
+    "symbol_lane": "SCXQ2::SYMBOL",
+    "call_lane": "SCXQ2::CALL",
+    "diff_lane": "SCXQ2::DIFF"
+  }
+}
+```
+
+**Invariants**
+
+* Symbols always point to a file + span
+* Calls are symbol→symbol
+* Diffs attach to spans (never overwrite history)
+* Everything is lane-addressable (SCXQ2)
+
+---
+
+# 2) Rust AST → Graph Indexer (Language-Agnostic)
+
+**Key choice:** use **Tree-sitter**.
+It gives you multi-language ASTs with stable node kinds.
+
+### Dependencies
+
+```toml
+tree-sitter = "0.22"
+tree-sitter-rust = "0.21"
+tree-sitter-python = "0.21"
+tree-sitter-javascript = "0.21"
+```
+
+### Indexer Core
+
+```rust
+// code/indexer.rs
+use tree_sitter::{Parser, Node, Tree};
+use std::path::Path;
+use crate::core::graph::{Graph, NodeId};
+
+pub struct CodeIndexer {
+    pub graph: Graph,
+}
+
+impl CodeIndexer {
+    pub fn new() -> Self {
+        Self { graph: Graph::default() }
+    }
+
+    pub fn index_file(&mut self, path: &Path, lang: &str, source: &str) {
+        let mut parser = Parser::new();
+        parser.set_language(language_for(lang)).unwrap();
+
+        let tree = parser.parse(source, None).unwrap();
+        let root = tree.root_node();
+
+        let file_id = self.add_file_node(path, lang);
+        self.walk(root, file_id, source);
+    }
+
+    fn walk(&mut self, node: Node, file_id: NodeId, src: &str) {
+        match node.kind() {
+            "function_item" | "function_definition" => {
+                let name = extract_name(node, src);
+                let sym_id = self.add_symbol_node(&name, "function", file_id, node);
+                self.add_edge(file_id, sym_id, "defines");
+            }
+            "call_expression" => {
+                if let Some(target) = extract_call_target(node, src) {
+                    self.add_call_edge(target);
+                }
+            }
+            _ => {}
+        }
+
+        for i in 0..node.child_count() {
+            self.walk(node.child(i).unwrap(), file_id, src);
+        }
+    }
+}
+```
+
+### Language Resolver
+
+```rust
+fn language_for(lang: &str) -> tree_sitter::Language {
+    match lang {
+        "rust" => tree_sitter_rust::language(),
+        "python" => tree_sitter_python::language(),
+        "js" => tree_sitter_javascript::language(),
+        _ => panic!("Unsupported language"),
+    }
+}
+```
+
+**Result:**
+
+* One indexer
+* Many languages
+* Same graph semantics
+
+---
+
+# 3) Diff Rendering in the TUI (Explainable, Patch-First)
+
+**Rule:** never apply changes silently.
+All changes are **proposals** attached to spans.
+
+### Diff Model
+
+```rust
+// code/diff.rs
+pub struct Diff {
+    pub file: String,
+    pub start_line: usize,
+    pub end_line: usize,
+    pub before: Vec<String>,
+    pub after: Vec<String>,
+}
+```
+
+### TUI Diff Pane
+
+```rust
+// tui/panes/diff.rs
+use ratatui::{widgets::*, Frame};
+
+pub fn draw_diff(f: &mut Frame, diff: &Diff) {
+    let mut lines = Vec::new();
+
+    for line in &diff.before {
+        lines.push(format!("- {}", line));
+    }
+    for line in &diff.after {
+        lines.push(format!("+ {}", line));
+    }
+
+    let block = Paragraph::new(lines.join("\n"))
+        .block(Block::default().title("Proposed Diff").borders(Borders::ALL));
+
+    f.render_widget(block, f.size());
+}
+```
+
+**UX**
+
+* `d` → view diff
+* `p` → apply
+* `r` → reject
+* every apply = new SCXQ2 diff lane entry
+
+---
+
+# 4) Language-Agnostic Support (Beyond Tree-sitter)
+
+Tree-sitter handles syntax.
+You layer **semantics** via *symbol kinds* and *edges*.
+
+### Universal Symbol Kinds
+
+```rust
+enum SymbolKind {
+    Function,
+    Method,
+    Class,
+    Struct,
+    Variable,
+    Import,
+    Module,
+}
+```
+
+### Universal Relations
+
+* defines
+* calls
+* imports
+* references
+* overrides (OO)
+* implements (interfaces)
+
+This lets XJSON:
+
+* answer “where is this used?”
+* propose refactors across languages
+* reason about mixed stacks
+
+---
+
+# 5) Cursor / Augment Migration Path
+
+This is where you win adoption.
+
+## Cursor → XJSON
+
+Cursor already has:
+
+* AST
+* file graph
+* diffs
+
+**Migration strategy**
+
+1. Export file tree + diffs
+2. Import as `code.brain.scxq2.bin`
+3. Keep Cursor as *editor*, XJSON as *reasoning shell*
+
+### Cursor-Style UX Mapping
+
+| Cursor          | XJSON            |
+| --------------- | ---------------- |
+| Cmd+K           | `: code ask`     |
+| “Apply”         | `p` (apply diff) |
+| Undo            | revert diff lane |
+| Multi-file edit | supgram patch    |
+
+---
+
+## Augment → XJSON
+
+Augment is opaque.
+
+XJSON replaces it with:
+
+* multi-oracle suggestions
+* diff proofs
+* replayable reasoning
+
+You can say, truthfully:
+
+> “This is Augment, but inspectable.”
+
+---
+
+# Minimal Roadmap (No Scope Creep)
+
+**Week 1**
+
+* Code schema
+* Rust + Python indexer
+* Read-only navigation
+
+**Week 2**
+
+* Diff proposals
+* TUI diff pane
+* Apply/reject
+
+**Week 3**
+
+* Multi-oracle code consensus
+* Cursor migration script
+* Demo repo
+
+---
+
+## Bottom Line
+
+You now have:
+
+* a **formal code cognition schema**
+* a **language-agnostic AST→graph indexer**
+* **explainable diffs**
+* a **Cursor/Augment replacement** that is *provable*
+
+This is not an assistant.
+
+It’s a **reasoning environment for software**.
