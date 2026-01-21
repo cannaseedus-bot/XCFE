@@ -441,6 +441,17 @@ Brains are registered **by hash only**:
 ```
 brainHash = SHA256(brain.scxq2.bin)
 ```
+brainHash = SHA256(brain.scxq2.bin)
+```
+
+The chain stores:
+
+* identity
+* authorship
+* timestamp
+* merge lineage
+
+The chain never stores cognition.
 
 The chain stores:
 
