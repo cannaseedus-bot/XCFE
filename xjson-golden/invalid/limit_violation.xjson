@@ -1,0 +1,47 @@
+{
+  "$schema": "xjson://schema/model/v1",
+  "@model": {
+    "id": "limit-violation",
+    "version": "1.0.0",
+    "format": "xjson-model"
+  },
+  "@provenance": {
+    "parent_hash": null,
+    "datasets": [],
+    "build": {},
+    "model_hash": "sha256:b75784d1e105dd1ca6a84054cdba9e7a5cfdce58a925f37c68d873bdf2e469f8"
+  },
+  "@decode": {
+    "encoding": "base64",
+    "compression": "none",
+    "byte_order": "little",
+    "checksum": {
+      "algorithm": "sha256",
+      "value": "00"
+    },
+    "strict": true
+  },
+  "@grams": {
+    "g:one": {
+      "type": "uni",
+      "scope": "lexical",
+      "count": 1,
+      "origin": "manual",
+      "formed_at": 0
+    },
+    "g:two": {
+      "type": "uni",
+      "scope": "lexical",
+      "count": 1,
+      "origin": "manual",
+      "formed_at": 0
+    }
+  },
+  "@limits": {
+    "max_payload_bytes": 1000,
+    "max_grams": 1,
+    "max_edges": 0,
+    "max_supgrams": 0,
+    "max_depth": 4
+  }
+}

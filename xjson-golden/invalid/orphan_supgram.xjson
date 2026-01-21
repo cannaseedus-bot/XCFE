@@ -1,0 +1,45 @@
+{
+  "$schema": "xjson://schema/model/v1",
+  "@model": {
+    "id": "orphan-supgram",
+    "version": "1.0.0",
+    "format": "xjson-model"
+  },
+  "@provenance": {
+    "parent_hash": null,
+    "datasets": [],
+    "build": {},
+    "model_hash": "sha256:89e541b65513630c87858e88aeb8261a48404aca73d094a9d16fd4c77ffdc9cd"
+  },
+  "@decode": {
+    "encoding": "base64",
+    "compression": "none",
+    "byte_order": "little",
+    "checksum": {
+      "algorithm": "sha256",
+      "value": "00"
+    },
+    "strict": true
+  },
+  "@grams": {
+    "s:Σ1": {
+      "type": "supgram",
+      "scope": "semantic",
+      "count": 1,
+      "origin": "manual",
+      "formed_at": 0,
+      "members": [
+        "g:missing"
+      ],
+      "stability": 0.9,
+      "entropy": 0.1
+    }
+  },
+  "@limits": {
+    "max_payload_bytes": 1000,
+    "max_grams": 10,
+    "max_edges": 0,
+    "max_supgrams": 5,
+    "max_depth": 4
+  }
+}

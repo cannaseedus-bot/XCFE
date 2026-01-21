@@ -1,0 +1,44 @@
+<svg width="960" height="420" viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .brain {
+      fill:#020617;
+      stroke-width:3;
+      rx:12;
+    }
+    .A { stroke:#00f5ff; }
+    .B { stroke:#16f2aa; }
+    .C { stroke:#ffb703; }
+    .merge {
+      stroke:#9c88ff;
+      stroke-width:4;
+      fill:none;
+    }
+    .label {
+      fill:#e6fffa;
+      font-family:Inter, monospace;
+      font-size:13px;
+      text-anchor:middle;
+    }
+  </style>
+
+  <rect x="80" y="140" width="180" height="80" class="brain A"/>
+  <rect x="390" y="60" width="180" height="80" class="brain B"/>
+  <rect x="390" y="260" width="180" height="80" class="brain C"/>
+
+  <text x="170" y="185" class="label">Brain A (hidden)</text>
+  <text x="480" y="105" class="label">Brain B (revealed)</text>
+  <text x="480" y="305" class="label">Brain C (hidden)</text>
+
+  <path d="M260 180 L390 100" class="merge"/>
+  <path d="M260 180 L390 300" class="merge"/>
+
+  <rect x="700" y="160" width="180" height="80" class="brain" stroke="#9c88ff"/>
+  <text x="790" y="205" class="label">Merged Answer</text>
+
+  <path d="M570 100 L700 200" class="merge"/>
+  <path d="M570 300 L700 200" class="merge"/>
+
+  <text x="480" y="30" class="label" font-size="18">
+    Federated Hybrid ZK Inference
+  </text>
+</svg>

@@ -29,6 +29,374 @@ This turns XJSON from “data with annotations” into a **human-readable execut
 
 ---
 
+## Why XJSON Is the Real Language of AI
+
+AI systems break when meaning is split across files, runtimes, and hidden conventions. XJSON fixes that by making **state, structure, and execution** explicit and portable.
+
+### 1. The Manifest *Is* the Model
+
+XJSON treats a model as a **closed state space**, not an implicit bundle of files and code. When architecture, tokenizer, and weights live in the same declarative surface, the model becomes **self-describing** and **auditable**.
+
+### 2. Tokenizers and Vocab Are Just State
+
+Tokenization is not magic; it’s data. Embedding vocab and merges in XJSON makes tokenization deterministic and replayable across runtimes.
+
+### 3. Base64 Is a Phase Boundary, Not a Hack
+
+Binary blobs (weights, compressed payloads) are **explicitly marked**. Decode is a deliberate phase transition, enabling:
+
+* deterministic loading
+* validation before execution
+* stable hashing and reproducibility
+
+Here’s a minimal manifest shape that keeps every dependency in one file:
+
+```json
+{
+  "manifest": { "model": "tiny-llama-56kb", "format": "all-base64" },
+  "architecture": { "dim": 128, "n_layers": 4, "n_heads": 8 },
+  "weights_compressed": {
+    "algorithm": "zstd+base64",
+    "data": "KLUv/SQAAABsAAAAAgAAANwAAACw..."
+  },
+  "tokenizer": {
+    "vocab_base64": "PD5zPg0KPDwvcz4NCg==",
+    "merges_base64": "aCBlDQpoZSBsDQpoZWwgbA0K"
+  }
+}
+```
+
+### 4. Single-File Identity
+
+One file = one mind. You can **diff**, **fork**, **hash**, and **compare** AI states without guessing which sidecar file changed.
+
+### 5. Execution Is a Conformance Problem
+
+XJSON flips the authority: the runtime **conforms** to declared structure instead of inventing semantics. That makes AI systems inspectable **before** they run.
+
+### 6. Grams Are First-Class State
+
+Unigrams, bigrams, supgrams, glyph-grams, and control grams are not “NLP tricks.” They are **addressable memory units** that can be stored, replayed, and audited as explicit state:
+
+```json
+{
+  "@grams": {
+    "bi": { "raw": "dGg=", "count": 19342 },
+    "sup": { "members": ["g:the", "g:meaning", "g:of", "g:life"] }
+  }
+}
+```
+
+This is why XJSON makes tokenization, memory topology, and inference **inspectable without execution**.
+
+**Bottom line:** XJSON isn’t “data about a model.” It’s **the model** — a portable, deterministic, self-contained specification of intelligence.
+
+---
+
+## XJSON Model Language Specification v1.0.0
+
+**Status:** FROZEN  
+**Authority:** XJSON  
+**Scope:** Deterministic, inspectable, single-file AI cognition models
+
+---
+
+### 0. Normative Keywords
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **MAY** are to be interpreted as described in RFC 2119.
+
+---
+
+### 1. Purpose and Design Intent
+
+XJSON defines a **split-authority, single-file language** for representing artificial cognition.
+
+An XJSON model file is:
+
+* a complete identity
+* a complete state description
+* a complete legality boundary
+* optionally executable
+* always inspectable
+
+Execution is **never implicit**.  
+Structure is **always authoritative**.
+
+---
+
+### 2. File Identity and Authority
+
+#### 2.1 One File = One Mind
+
+An XJSON model file represents **exactly one cognitive identity**.
+
+* Identity MUST be self-contained
+* Identity MUST be hash-addressable
+* Identity MUST be verifiable without execution
+
+---
+
+### 3. Required Top-Level Structure
+
+An XJSON model file MUST be a JSON object with the following required keys:
+
+```json
+{
+  "$schema": "xjson://schema/model/v1",
+  "@model": {},
+  "@provenance": {},
+  "@decode": {},
+  "@grams": {},
+  "@limits": {}
+}
+```
+
+Any additional top-level keys MUST be namespaced with `@`.
+
+---
+
+### 4. Schema and Validation Layer
+
+#### 4.1 Schema Declaration
+
+Every XJSON model MUST declare:
+
+```json
+"$schema": "xjson://schema/model/v1"
+```
+
+#### 4.2 Validation Rule
+
+A model MUST be validated against its declared schema **before**:
+
+* decoding
+* execution
+* inference
+* federation
+
+Failure to validate MUST abort all subsequent phases.
+
+---
+
+### 5. Model Declaration (`@model`)
+
+#### 5.1 Required Fields
+
+```json
+"@model": {
+  "id": "string",
+  "version": "semver",
+  "format": "xjson-model",
+  "description": "string (optional)"
+}
+```
+
+#### 5.2 Semantics
+
+* `id` uniquely identifies the cognitive artifact
+* `version` denotes structural compatibility
+* `format` MUST be `"xjson-model"`
+
+---
+
+### 6. Provenance and Identity (`@provenance`)
+
+#### 6.1 Required Fields
+
+```json
+"@provenance": {
+  "model_hash": "sha256:…",
+  "parent_hash": "sha256:… | null",
+  "datasets": [],
+  "build": {}
+}
+```
+
+#### 6.2 Dataset Declaration
+
+Each dataset entry MUST include:
+
+```json
+{
+  "source": "string",
+  "hash": "sha256:…",
+  "revision": "string"
+}
+```
+
+#### 6.3 Semantics
+
+* `model_hash` MUST equal the hash of the canonical file **with `@provenance.model_hash` removed**
+* `parent_hash` defines lineage (fork / merge)
+* Provenance MUST be immutable post-emit
+
+---
+
+### 7. Decode Contract (`@decode`)
+
+#### 7.1 Required Fields
+
+```json
+"@decode": {
+  "encoding": "base64",
+  "compression": "zstd | none",
+  "byte_order": "little",
+  "checksum": {
+    "algorithm": "sha256",
+    "value": "hex"
+  },
+  "strict": true
+}
+```
+
+#### 7.2 Decode Pipeline (Normative Order)
+
+1. Base64 decode  
+2. Checksum verification  
+3. Decompression  
+4. Byte-order normalization  
+5. Structural parse  
+6. Schema validation
+
+Failure at any step MUST abort.
+
+---
+
+### 8. Grams Namespace (`@grams`)
+
+#### 8.1 Definition
+
+A **gram** is a first-class symbolic unit of cognition.
+
+Grams are **state**, not tokens.
+
+#### 8.2 Canonical Gram Structure
+
+```json
+"g:example": {
+  "type": "uni | bi | tri | n | supgram | glyph",
+  "scope": "lexical | semantic | structural",
+  "count": 12345,
+  "origin": "string",
+  "formed_at": 1890000000
+}
+```
+
+#### 8.3 Supgrams
+
+Supgrams MUST additionally declare:
+
+```json
+{
+  "members": ["g:a", "g:b"],
+  "stability": 0.0–1.0,
+  "entropy": 0.0–1.0
+}
+```
+
+#### 8.4 Invariants
+
+* Gram IDs MUST be unique
+* All referenced members MUST exist
+* Grams MUST be inspectable without execution
+
+---
+
+### 9. Execution and Proof Envelope (`@proof`)
+
+#### 9.1 Optional but Standardized
+
+Execution MAY emit a proof envelope.
+
+```json
+"@proof": {
+  "input_hash": "sha256:…",
+  "execution": "infer | merge | compress",
+  "activated_grams": [],
+  "checks": {},
+  "result_hash": "sha256:…"
+}
+```
+
+#### 9.2 Proof Semantics
+
+* Proofs MUST be replayable
+* Proofs MUST be verifiable against structure alone
+* Proofs MUST NOT mutate model state
+
+---
+
+### 10. Size and Complexity Limits (`@limits`)
+
+#### 10.1 Required Fields
+
+```json
+"@limits": {
+  "max_payload_bytes": 67108864,
+  "max_grams": 500000,
+  "max_edges": 2000000,
+  "max_supgrams": 100000,
+  "max_depth": 64
+}
+```
+
+#### 10.2 Enforcement
+
+* Tooling MUST warn on limit violation
+* Runtimes MAY refuse execution
+
+---
+
+### 11. Determinism Guarantees
+
+An XJSON model MUST satisfy:
+
+* deterministic decoding
+* deterministic validation
+* deterministic execution (given same inputs)
+* deterministic hashing
+
+No implementation-defined behavior is permitted.
+
+---
+
+### 12. Federation and Lineage (Normative)
+
+* Models MAY be merged via declared operations
+* Lineage MUST be recorded in `@provenance`
+* Conflicts MUST be resolved explicitly
+* Silent overwrites are forbidden
+
+---
+
+### 13. Security and Auditability
+
+* No executable code may exist outside declared execution phases
+* No hidden state may exist outside declared namespaces
+* All behavior MUST be derivable from structure + inputs
+
+---
+
+### 14. Final Law
+
+> **XJSON is not a data format.  
+> It is a language of constrained existence.**
+
+If a fact is not present in the file, it does not exist.  
+If an action is not proven, it did not happen.
+
+---
+
+### 15. Versioning Rule
+
+This specification is **v1.0.0 FROZEN**.
+
+* Backward-incompatible changes REQUIRE v2
+* Extensions MUST be namespaced
+* No silent reinterpretation is permitted
+
+---
+
 ## The Rule Change That Makes XJSON Real
 
 ### 1. Dual-Surface Law (non-negotiable)
@@ -5416,5 +5784,3 @@ That means a verifier can say:
 * These schemas deliberately enforce **internal authorities** (`xjson://schema/core/v1`, `xcfe://...`) and forbid external URLs by omission.
 * `sha256:` is required everywhere the chain binds to program/policy/packs/session (you can widen to sha512/blake3 in v2, but v1 is intentionally tight for deterministic proofs).
 * If you want **multi-hash agility in v1**, you can add a *v1.0.1* that expands hash patterns safely without breaking determinism.
-
-
