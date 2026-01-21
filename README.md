@@ -2,7 +2,7 @@
   <img src="xjson-logo.svg" alt="XJSON Logo" width="228" height="228">
 </p>
 
-<h1 align="center">XJSON / XCFE</h1>
+<h1 align="center">XJSON</h1>
 
 <p align="center">
   <strong>Deterministic, Verifiable, Proof-Based Program Execution</strong>
@@ -20,9 +20,9 @@
 
 ---
 
-## What is XJSON/XCFE?
+## What is XJSON?
 
-**XJSON** is a structured, indentation-based language for defining executable workflows. **XCFE** (eXtensible Code Flow Engine) is the deterministic runtime and proof system that powers it.
+**XJSON** is the executable, structured, indentation-based language for defining workflows. **XCFE** (eXtensible Code Flow Engine) is the formal execution model and proof runtime that XJSON programs obey. XJSON is the program; XCFE is the deterministic law that governs parsing, execution, and proof.
 
 Key properties:
 
@@ -52,13 +52,13 @@ Key properties:
 
 ```bash
 # Install CLI globally
-npm install -g @xcfe/cli
+npm install -g @xjson/cli
 
 # Or install packages individually
-npm install @xcfe/core      # Core kernel
-npm install @xcfe/server    # Verification server
-npm install @xcfe/basher    # Structured command layer
-npm install @xcfe/crypto-pack  # Crypto extensions
+npm install @xjson/core      # Core kernel
+npm install @xjson/server    # Verification server
+npm install @xjson/basher    # Structured command layer
+npm install @xjson/crypto-pack  # Crypto extensions
 ```
 
 ## Quick Start
@@ -125,19 +125,19 @@ xcfe infer examples/hello.xjson --endpoint http://localhost:8080 --model demo
 
 | Package | Description |
 |---------|-------------|
-| `@xcfe/core` | Deterministic kernel: parser, AST, hashing, verification, proofs |
-| `@xcfe/cli` | Command-line tools: parse, ast, hash, verify, sign, prove, keygen |
-| `@xcfe/server` | HTTP verification gateway with auth adapter |
-| `@xcfe/basher` | Structured XCFE command layer (not a shell) |
-| `@xcfe/crypto-pack` | Session binding, SCX chains, crypto schemas |
-| `@xcfe/mx2lex` | MX2LEX grammar manager and compiler for XJSON |
+| `@xjson/core` | Deterministic kernel: parser, AST, hashing, verification, proofs |
+| `@xjson/cli` | Command-line tools: parse, ast, hash, verify, sign, prove, keygen |
+| `@xjson/server` | HTTP verification gateway with auth adapter |
+| `@xjson/basher` | Structured XCFE command layer (not a shell) |
+| `@xjson/crypto-pack` | Session binding, SCX chains, crypto schemas |
+| `@xjson/mx2lex` | MX2LEX grammar manager and compiler for XJSON |
 | `mx2gym` | Official MX2GYM definition and fold trainer format (`mx2gym/readme.md`) |
 
 ## Repository Layout
 
 | Path | Purpose |
 |------|---------|
-| `packages/` | Core XCFE packages (core, cli, server, basher, crypto-pack, mx2lex). |
+| `packages/` | Core XJSON/XCFE packages (core, cli, server, basher, crypto-pack, mx2lex). |
 | `addons/` | Inference add-ons (API proxy + local model runner). |
 | `asx/` | ASX canonicalization/ABI utilities. |
 | `docs/` | Reference docs and templates. |
@@ -209,7 +209,7 @@ xcfe infer program.xjson --endpoint http://localhost:8092 --model llama3.1
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌─────────────┐   ┌─────────────┐   ┌─────────────────────┐   │
-│  │  @xcfe/cli  │   │@xcfe/server │   │  @xcfe/crypto-pack  │   │
+│  │  @xjson/cli  │   │@xjson/server │   │  @xjson/crypto-pack  │   │
 │  │             │   │             │   │                     │   │
 │  │ • parse     │   │ • /verify   │   │ • session-binding   │   │
 │  │ • ast       │   │ • /hash     │   │ • scx-chain         │   │
@@ -221,7 +221,7 @@ xcfe infer program.xjson --endpoint http://localhost:8092 --model llama3.1
 │         └────────────┬────┴─────────────────────┘               │
 │                      │                                          │
 │              ┌───────▼───────┐                                  │
-│              │  @xcfe/core   │                                  │
+│              │  @xjson/core   │                                  │
 │              │               │                                  │
 │              │ • parseSurface│                                  │
 │              │ • lowerToAst  │                                  │
