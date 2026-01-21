@@ -121,6 +121,22 @@ curl -X POST http://localhost:8080/xcfe/verify \
 xcfe infer examples/hello.xjson --endpoint http://localhost:8080 --model demo
 ```
 
+## Tools
+
+### Phi → XJSON brain generator
+
+Convert a Phi-style tokenizer folder into an embedding-free XJSON brain (no tensors read):
+
+```bash
+node tools/phi-to-brain.mjs ./phi-3-instruct brain.json --max-hash-mb 64
+```
+
+Validate the resulting brain file:
+
+```bash
+node tools/xjson-validate.mjs brain.json
+```
+
 ## Packages
 
 | Package | Description |
