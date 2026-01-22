@@ -23,6 +23,9 @@ import { cmdPub } from "./pub.js";
 import { cmdAuth } from "./auth.js";
 import { cmdKeyRemote } from "./key_remote.js";
 import { cmdInfer } from "./infer.js";
+import { cmdModels } from "./models.js";
+import { cmdConsensus } from "./consensus.js";
+import { cmdBench } from "./bench.js";
 import { cmdTerminal } from "./terminal.js";
 
 /**
@@ -44,6 +47,12 @@ export async function route(argv) {
       return cmdVerify(args);
     case "infer":
       return cmdInfer(args);
+    case "models":
+      return cmdModels(args);
+    case "consensus":
+      return cmdConsensus(args);
+    case "bench":
+      return cmdBench(args);
     case "terminal":
       return cmdTerminal(args, { route });
     case "sign":
@@ -183,6 +192,18 @@ Commands:
 
   xcfe infer <file.xjson> [--endpoint url] [--model name] [--out file]
       Send raw XJSON inference request (no JSON wrapping)
+
+  xcfe models
+      List discovered models in ./models
+
+  xcfe models info <name>
+      Show model capabilities
+
+  xcfe consensus show [--file path]
+      Show consensus disagreement metrics
+
+  xcfe bench --prompt "..." [--via m1,m2] [--runs 10] [--endpoint url] [--cmd "binary arg"]
+      Benchmark inference performance
 
   xcfe terminal
       Start interactive XCFE terminal for CLI commands
