@@ -4606,6 +4606,13 @@ project/
     └── diffs/
 ```
 
+Additional tooling and fixtures in this repository:
+
+* `tools/eslint-plugin-asx/` — ESLint rules for ASX envelopes (effects, import hash binding, transitive checks).
+* `tools/vscode-asx/` — VSCode diagnostics extension for ASX envelopes.
+* `tests/golden/` — deterministic lint/verifier golden vectors.
+* `codex/lex/` and `codex/mx2lex/` — MX2LEX grammar, pack, oracle, and scoring fixtures.
+
 ---
 
 ## Design Guarantees
