@@ -96,6 +96,7 @@ Node (reference CLI):
 ```bash
 npm install -g @xjson/brain
 ```
+```
 Brain Hash: 0x8f3c…
 Grams:      412,903
 Edges:      1,238,441
