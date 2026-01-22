@@ -39,6 +39,8 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [Final Note](#final-note)
 - [Browser Demo (Screenshots)](#browser-demo-screenshots)
 - [Desktop Packaging (Tauri)](#desktop-packaging-tauri)
+- [KUHUL-CORE v1 (Locked)](#kuhul-core-v1-locked)
+- [KGB-ZK-2 (Recursive Aggregation)](#kgb-zk-2-recursive-aggregation)
 - [CLI Reference (Full Help Output)](#cli-reference-full-help-output)
 - [Why This Matters](#why-this-matters)
 - [Decision: Rust-first, WASM-capable, Python bindings optional](#decision-rust-first-wasm-capable-python-bindings-optional)
@@ -190,6 +192,20 @@ tray/background mode, and installer workflows. See the guide in
 `docs/desktop-tauri.md`. The repository does **not** store binary icon files; follow
 `docs/desktop-assets/README.md` to create the required `.icns` and `.ico` assets locally
 when packaging desktop builds.
+
+---
+
+## KUHUL-CORE v1 (Locked)
+
+The canonical KUHUL core specification (interpreter, inference walk, learning, and merge
+rules) lives at `specs/kuhul-core-v1.md`.
+
+---
+
+## KGB-ZK-2 (Recursive Aggregation)
+
+Recursive proof aggregation for KUHUL inference legality is specified in
+`specs/kgb-zk-2-recursive-aggregation.md`.
 
 ---
 
