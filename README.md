@@ -33,7 +33,7 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [Proof-Carrying Inference](#proof-carrying-inference)
 - [Browser-Native by Design](#browser-native-by-design)
 - [Repository Scope](#repository-scope)
-- [Runtime Bundle Reference](#runtime-bundle-reference)
+- [Specs and Demo Assets](#specs-and-demo-assets)
 - [Why This Exists](#why-this-exists)
 - [Status](#status)
 - [License](#license)
@@ -746,10 +746,13 @@ It does **not** ship pretrained brains.
 
 ---
 
-## Runtime Bundle Reference
+## Specs and Demo Assets
 
-For the authoritative runtime blueprint (structs, policies, CLI/TUI layout, and specs), see
-[docs/xjson-runtime-bundle.md](docs/xjson-runtime-bundle.md).
+The `docs/` directory includes canonical references and artifacts:
+
+* Prompt Tape v1 specification: `docs/prompt-tape-v1.md`
+* Demo brain artifact: `docs/demo.brain.json`
+* Paper assets and figures: `docs/paper-assets.md` and `docs/figures/`
 
 ---
 
