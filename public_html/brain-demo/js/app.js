@@ -11,6 +11,10 @@ const log = (s) => {
   $("p2pLog").textContent += s + "\n";
 };
 
+let deferredPrompt = null;
+const RELEASE_CHANNEL_KEY = "xjson-release-channel";
+const DEFAULT_CHANNEL = "stable";
+
 const federatedBrains = new Map();
 const brainColors = ["#00ffcc", "#ff55aa", "#6ee7ff", "#ffd166", "#9b5de5"];
 
@@ -23,10 +27,26 @@ let p2p = null;
 async function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
   try {
-    await navigator.serviceWorker.register("/brain-demo/sw.js");
+    const registration = await navigator.serviceWorker.register("/brain-demo/sw.js");
+    registration.update();
   } catch (err) {
     console.warn("[sw] registration failed", err);
   }
+}
+
+function showInstallBanner() {
+  if (document.querySelector(".install-btn")) return;
+  const btn = document.createElement("button");
+  btn.textContent = "Install XJSON IDE";
+  btn.className = "install-btn";
+  btn.onclick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    btn.remove();
+  };
+  document.body.appendChild(btn);
 }
 
 async function init() {
@@ -39,6 +59,8 @@ async function init() {
   refreshBrainSelector();
   renderAll();
   setupP2P();
+  initReleaseChannel();
+  initRegistryPanel();
 
   $("btnInfer").addEventListener("click", runInfer);
   $("activeBrain").addEventListener("change", () => renderAll());
@@ -185,3 +207,82 @@ async function sha256Hex(u8) {
 }
 
 init();
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner();
+});
+
+window.addEventListener("appinstalled", () => {
+  console.log("[pwa] XJSON Brain IDE installed");
+});
+
+function initReleaseChannel() {
+  const select = $("releaseChannel");
+  if (!select) return;
+  const saved = localStorage.getItem(RELEASE_CHANNEL_KEY) || DEFAULT_CHANNEL;
+  select.value = saved;
+  notifySWChannel(saved);
+
+  select.addEventListener("change", () => {
+    const channel = select.value;
+    localStorage.setItem(RELEASE_CHANNEL_KEY, channel);
+    notifySWChannel(channel);
+  });
+
+  navigator.serviceWorker?.addEventListener("controllerchange", () => {
+    const channel = localStorage.getItem(RELEASE_CHANNEL_KEY) || DEFAULT_CHANNEL;
+    notifySWChannel(channel);
+  });
+}
+
+function notifySWChannel(channel) {
+  if (!navigator.serviceWorker?.controller) return;
+  navigator.serviceWorker.controller.postMessage({
+    type: "set-channel",
+    channel
+  });
+  navigator.serviceWorker.controller.postMessage({ type: "check-update" });
+}
+
+function initRegistryPanel() {
+  const status = $("registryStatus");
+  const output = $("registryOutput");
+  const connectBtn = $("btnRegistryConnect");
+  const lookupBtn = $("btnRegistryLookup");
+  const registerBtn = $("btnRegistryRegister");
+
+  if (!status || !output || !connectBtn || !lookupBtn || !registerBtn) return;
+
+  if (window.ethereum) {
+    status.textContent = "Wallet detected. Connect to query the registry.";
+    connectBtn.disabled = false;
+  } else {
+    status.textContent = "Wallet not detected. Install a Web3 wallet to continue.";
+    connectBtn.disabled = true;
+  }
+
+  connectBtn.addEventListener("click", async () => {
+    if (!window.ethereum) return;
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      status.textContent = `Connected: ${accounts[0] ?? "unknown"}`;
+      lookupBtn.disabled = false;
+      registerBtn.disabled = false;
+    } catch (err) {
+      status.textContent = "Wallet connection declined.";
+      output.textContent = String(err);
+    }
+  });
+
+  lookupBtn.addEventListener("click", () => {
+    output.textContent =
+      "Registry lookup placeholder: configure REGISTRY_ADDRESS and ABI.";
+  });
+
+  registerBtn.addEventListener("click", () => {
+    output.textContent =
+      "Registry register placeholder: sign + submit on-chain transaction.";
+  });
+}
