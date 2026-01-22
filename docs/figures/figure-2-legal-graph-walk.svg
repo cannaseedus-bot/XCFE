@@ -1,0 +1,22 @@
+<svg width="800" height="300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .node { fill:#ffffff; stroke:#000; stroke-width:1.5; }
+    .edge { stroke:#000; stroke-width:1.2; }
+    .illegal { stroke-dasharray:4 4; }
+    .text { font-family:Helvetica, Arial; font-size:12px; }
+  </style>
+
+  <circle cx="120" cy="150" r="18" class="node"/>
+  <circle cx="300" cy="80" r="18" class="node"/>
+  <circle cx="300" cy="220" r="18" class="node"/>
+  <circle cx="520" cy="150" r="20" class="node"/>
+
+  <line x1="138" y1="150" x2="282" y2="92" class="edge"/>
+  <line x1="138" y1="150" x2="282" y2="208" class="edge illegal"/>
+  <line x1="318" y1="92" x2="500" y2="150" class="edge"/>
+
+  <text x="120" y="185" text-anchor="middle" class="text">Start</text>
+  <text x="300" y="55" text-anchor="middle" class="text">Legal</text>
+  <text x="300" y="255" text-anchor="middle" class="text">Illegal</text>
+  <text x="520" y="185" text-anchor="middle" class="text">Answer</text>
+</svg>
