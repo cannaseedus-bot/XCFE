@@ -38,6 +38,7 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [License](#license)
 - [Final Note](#final-note)
 - [Browser Demo (Screenshots)](#browser-demo-screenshots)
+- [Desktop Packaging (Tauri)](#desktop-packaging-tauri)
 - [CLI Reference (Full Help Output)](#cli-reference-full-help-output)
 - [Why This Matters](#why-this-matters)
 - [Decision: Rust-first, WASM-capable, Python bindings optional](#decision-rust-first-wasm-capable-python-bindings-optional)
@@ -176,6 +177,16 @@ Brain        → compiled executable artifact (brain.scxq2.bin)
 ---
 
 Browser demos do **not** require installation.
+
+---
+
+## Desktop Packaging (Tauri)
+
+The XJSON Brain IDE can be wrapped as a native desktop app using Tauri for auto-update,
+tray/background mode, and installer workflows. See the guide in
+`docs/desktop-tauri.md`. The repository does **not** store binary icon files; follow
+`docs/desktop-assets/README.md` to create the required `.icns` and `.ico` assets locally
+when packaging desktop builds.
 
 ---
 
