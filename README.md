@@ -33,6 +33,7 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [Proof-Carrying Inference](#proof-carrying-inference)
 - [Browser-Native by Design](#browser-native-by-design)
 - [Repository Scope](#repository-scope)
+- [Runtime Bundle Reference](#runtime-bundle-reference)
 - [Why This Exists](#why-this-exists)
 - [Status](#status)
 - [License](#license)
@@ -739,8 +740,16 @@ This repository defines:
 * federation semantics
 * proof model
 * reference tooling
+* runtime bundle reference (see [docs/xjson-runtime-bundle.md](docs/xjson-runtime-bundle.md))
 
 It does **not** ship pretrained brains.
+
+---
+
+## Runtime Bundle Reference
+
+For the authoritative runtime blueprint (structs, policies, CLI/TUI layout, and specs), see
+[docs/xjson-runtime-bundle.md](docs/xjson-runtime-bundle.md).
 
 ---
 
