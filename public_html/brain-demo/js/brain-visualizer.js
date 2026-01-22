@@ -15,7 +15,7 @@ export function computeLayout(nodeCount, width, height) {
 }
 
 export function renderBrain(svg, graph, path, options = {}) {
-  const { heat = {}, width = 900, height = 520 } = options;
+  const { heat = {}, width = 900, height = 520, animate, stepDelay = 350 } = options;
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.innerHTML = "";
 
@@ -32,6 +32,7 @@ export function renderBrain(svg, graph, path, options = {}) {
 
     const line = document.createElementNS(svg.namespaceURI, "line");
     line.classList.add("edge", "local");
+    line.setAttribute("id", `e-${edge.from}-${edge.to}`);
     line.setAttribute("x1", from.x);
     line.setAttribute("y1", from.y);
     line.setAttribute("x2", to.x);
@@ -64,7 +65,11 @@ export function renderBrain(svg, graph, path, options = {}) {
     nodesGroup.appendChild(label);
   });
 
-  animatePath(svg, path);
+  if (animate === "step") {
+    animatePathStepwise(svg, path, { stepDelay });
+  } else {
+    animatePath(svg, path);
+  }
 
   if (heat && Object.keys(heat).length) {
     renderHeatLegend(svg, heat);
@@ -75,9 +80,28 @@ export function renderBrain(svg, graph, path, options = {}) {
 
 export function animatePath(svg, path) {
   if (!Array.isArray(path)) return;
+  clearActiveNodes(svg);
   path.forEach((nodeId) => {
     const node = svg.querySelector(`#n${nodeId}`);
     node?.classList.add("active");
+  });
+}
+
+export function animatePathStepwise(svg, path, { stepDelay = 350 } = {}) {
+  if (!Array.isArray(path)) return;
+  clearActiveNodes(svg);
+
+  path.forEach((nodeId, index) => {
+    setTimeout(() => {
+      const node = svg.querySelector(`#n${nodeId}`);
+      node?.classList.add("active");
+    }, index * stepDelay);
+  });
+}
+
+function clearActiveNodes(svg) {
+  svg.querySelectorAll(".node.active").forEach((node) => {
+    node.classList.remove("active");
   });
 }
 
