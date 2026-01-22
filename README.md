@@ -198,6 +198,21 @@ Node (reference CLI):
 ```bash
 npm install -g @xjson/brain
 ```
+
+Node (brain builder CLI):
+
+```bash
+npm install -g xjson-brain-builder
+```
+
+Example workflow:
+
+```bash
+xjson-brain-builder build ./dataset --out brain.json --grams ngram,bigram,trigram,supgram
+xjson-brain-builder compress brain.json --out brain.scxq2.bin
+xjson-brain-builder infer brain.scxq2.bin --prompt "explain XJSON" --steps 64 --trace
+xjson-brain-builder prove brain.scxq2.bin --domain infer --out proof.kgbzk
+```
 Brain Hash: 0x8f3c…
 Grams:      412,903
 Edges:      1,238,441

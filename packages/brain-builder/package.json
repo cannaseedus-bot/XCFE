@@ -1,0 +1,24 @@
+{
+  "name": "xjson-brain-builder",
+  "version": "1.0.0",
+  "description": "CLI for building, compressing, and proving XJSON brains.",
+  "type": "module",
+  "bin": {
+    "xjson-brain-builder": "./bin/xjson-brain-builder.js"
+  },
+  "main": "src/cli.js",
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo 'no lint configured'"
+  },
+  "keywords": ["xjson", "brain", "scxq2", "cli"],
+  "author": "XJSON Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/"
+  ]
+}
