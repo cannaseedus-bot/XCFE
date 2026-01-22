@@ -41,6 +41,8 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [Desktop Packaging (Tauri)](#desktop-packaging-tauri)
 - [KUHUL-CORE v1 (Locked)](#kuhul-core-v1-locked)
 - [KGB-ZK-2 (Recursive Aggregation)](#kgb-zk-2-recursive-aggregation)
+- [KGB-ZK-2 Solidity Verifier](#kgb-zk-2-solidity-verifier)
+- [Brain Registry + Merge Spec](#brain-registry--merge-spec)
 - [CLI Reference (Full Help Output)](#cli-reference-full-help-output)
 - [Why This Matters](#why-this-matters)
 - [Decision: Rust-first, WASM-capable, Python bindings optional](#decision-rust-first-wasm-capable-python-bindings-optional)
@@ -206,6 +208,20 @@ rules) lives at `specs/kuhul-core-v1.md`.
 
 Recursive proof aggregation for KUHUL inference legality is specified in
 `specs/kgb-zk-2-recursive-aggregation.md`.
+
+---
+
+## KGB-ZK-2 Solidity Verifier
+
+The on-chain verifier interface and Solidity outline for KGB-ZK-2 lives at
+`specs/kgb-zk-2-solidity-verifier.md`.
+
+---
+
+## Brain Registry + Merge Spec
+
+The canonical on-chain registry ABI and paper-grade merge specification live at
+`specs/brain-registry-merge-spec.md`.
 
 ---
 
