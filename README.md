@@ -171,8 +171,11 @@ Execution is governed by **XCFE**, the XJSON Control & Flow Execution law.
 XJSON        → executable program
 XCFE         → execution law (deterministic semantics)
 SCXQ2        → binary encoding (lanes, no JSON at runtime)
+SCX-GLYPH-1  → canonical glyph wire format (SCX v3 / KUHUL)
 Brain        → compiled executable artifact (brain.scxq2.bin)
 ```
+
+Canonical glyph encoding details live in `docs/scx-glyph-spec.md`.
 
 ---
 
