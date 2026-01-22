@@ -61,7 +61,21 @@ Brain        → compiled executable artifact (brain.scxq2.bin)
 
 ---
 
-## Quick Start
+---
+
+Browser demos do **not** require installation.
+
+---
+
+This section shows the **end-to-end lifecycle** of an XJSON brain:
+
+1. build a brain from data
+2. run inference (graph walk)
+3. inspect / prove execution
+4. merge brains
+5. register on-chain
+
+No embeddings. No tensors. No GPU.
 
 This section shows the **end-to-end lifecycle** of an XJSON brain:
 
@@ -82,6 +96,14 @@ Node (reference CLI):
 ```bash
 npm install -g @xjson/brain
 ```
+Brain Hash: 0x8f3c…
+Grams:      412,903
+Edges:      1,238,441
+Supgrams:   31,022
+Lanes:      GRAM | EDGE | PATH | PROOF
+```
+
+---
 
 Python (optional tooling):
 
@@ -150,6 +172,8 @@ Path Hash:  0x9a17…
 Legal:      true
 Steps:      17
 ```
+Answer:
+Quantum tunneling is the phenomenon where…
 
 Inference is a **deterministic graph traversal**, not sampling.
 
