@@ -31,17 +31,21 @@ This turns XJSON from “data with annotations” into a **human-readable execut
 
 ## Why XJSON Is the Real Language of AI
 
-AI systems break when meaning is split across files, runtimes, and hidden conventions. XJSON fixes that by making **state, structure, and execution** explicit and portable.
+AI systems fail when meaning is scattered across files, runtimes, and implicit conventions. XJSON fixes this by making **state, structure, and execution** explicit and portable.
 
 ### 1. The Manifest *Is* the Model
 
-XJSON treats a model as a **closed state space**, not an implicit bundle of files and code. When architecture, tokenizer, and weights live in the same declarative surface, the model becomes **self-describing** and **auditable**.
+XJSON treats a model as a **closed state space**, not an implicit bundle of code and files. When architecture, tokenizer, and weights live in one declarative surface, the model becomes **self-describing**, **auditable**, and **transferable**.
 
-### 2. Tokenizers and Vocab Are Just State
+### 2. Execution Is Conformance, Not Invention
 
-Tokenization is not magic; it’s data. Embedding vocab and merges in XJSON makes tokenization deterministic and replayable across runtimes.
+XJSON flips authority: the runtime **conforms** to declared structure instead of inventing semantics. Execution is an interpretation of explicit state, which makes inspection possible **before** running anything.
 
-### 3. Base64 Is a Phase Boundary, Not a Hack
+### 3. Tokenizers and Vocab Are Just State
+
+Tokenization is not special code; it’s data. Embedding vocab and merges in XJSON makes tokenization deterministic, replayable, and portable across runtimes.
+
+### 4. Base64 Is a Phase Boundary, Not a Hack
 
 Binary blobs (weights, compressed payloads) are **explicitly marked**. Decode is a deliberate phase transition, enabling:
 
@@ -66,13 +70,9 @@ Here’s a minimal manifest shape that keeps every dependency in one file:
 }
 ```
 
-### 4. Single-File Identity
+### 5. Single-File Identity
 
 One file = one mind. You can **diff**, **fork**, **hash**, and **compare** AI states without guessing which sidecar file changed.
-
-### 5. Execution Is a Conformance Problem
-
-XJSON flips the authority: the runtime **conforms** to declared structure instead of inventing semantics. That makes AI systems inspectable **before** they run.
 
 ### 6. Grams Are First-Class State
 
@@ -89,7 +89,11 @@ Unigrams, bigrams, supgrams, glyph-grams, and control grams are not “NLP trick
 
 This is why XJSON makes tokenization, memory topology, and inference **inspectable without execution**.
 
-**Bottom line:** XJSON isn’t “data about a model.” It’s **the model** — a portable, deterministic, self-contained specification of intelligence.
+### 7. Identity, Not Packaging
+
+Single-file XJSON is not a convenience; it is **cognitive identity**. One hash equals one mind. One diff equals one learning delta. The file is the state, the state is the system.
+
+**Bottom line:** XJSON isn’t “data about a model.” It is **the model** — a portable, deterministic, self-contained specification of intelligence.
 
 ---
 

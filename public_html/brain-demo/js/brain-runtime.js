@@ -22,10 +22,42 @@ async function loadBrainBytes() {
     const res = await fetch("brain.scxq2.bin");
     if (!res.ok) throw new Error(`missing brain.scxq2.bin (${res.status})`);
     const buf = await res.arrayBuffer();
-    return new Uint8Array(buf);
+    const bytes = new Uint8Array(buf);
+    cacheBrainBytes(bytes);
+    return bytes;
   } catch (err) {
+    const cached = getCachedBrainBytes();
+    if (cached) {
+      console.warn("[brain] using cached brain bytes", err);
+      return cached;
+    }
     console.warn("[brain] using embedded demo bytes", err);
     return FALLBACK_BYTES;
+  }
+}
+
+function cacheBrainBytes(bytes) {
+  try {
+    const b64 = btoa(String.fromCharCode(...bytes));
+    localStorage.setItem("xjson:lastBrain", b64);
+  } catch (err) {
+    console.warn("[brain] unable to cache brain bytes", err);
+  }
+}
+
+function getCachedBrainBytes() {
+  try {
+    const b64 = localStorage.getItem("xjson:lastBrain");
+    if (!b64) return null;
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  } catch (err) {
+    console.warn("[brain] unable to load cached brain bytes", err);
+    return null;
   }
 }
 
