@@ -2,7 +2,8 @@ export const PROTO = {
   HELLO: "hello",
   WANT: "want",
   BRAIN_META: "brain-meta",
-  BRAIN_DONE: "brain-done"
+  BRAIN_DONE: "brain-done",
+  DELTA: "delta"
 };
 
 export const BIN = {

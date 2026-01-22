@@ -5,6 +5,7 @@ import { renderLaneHeat } from "./lane-heatmap.js";
 import { emitProof } from "./brain-proof.js";
 import { BrainP2P } from "./p2p.js";
 import { decodeSCXQ2 } from "../wasm/scxq2_decoder.js";
+import { playTraining } from "./training-timelapse.js";
 
 const $ = (id) => document.getElementById(id);
 const log = (s) => {
@@ -64,6 +65,7 @@ async function init() {
 
   $("btnInfer").addEventListener("click", runInfer);
   $("activeBrain").addEventListener("change", () => renderAll());
+  $("btnTimelapse").addEventListener("click", () => runTimelapse());
 }
 
 function refreshBrainSelector() {
@@ -95,11 +97,11 @@ function getActiveBrainHash() {
   return selected;
 }
 
-function renderAll(path = []) {
+function renderAll(path = [], options = {}) {
   if (!localBrain) return;
   const svg = $("brain-svg");
   const heat = getHeat();
-  layoutPositions = renderBrain(svg, localBrain, path, { heat });
+  layoutPositions = renderBrain(svg, localBrain, path, { heat, ...options });
 
   const overlayBrains = [...federatedBrains.entries()].map(([hash, entry], i) => ({
     id: hash,
@@ -123,7 +125,22 @@ async function runInfer() {
     2
   );
 
-  renderAll(path);
+  renderAll(path, { animate: "step" });
+}
+
+function runTimelapse() {
+  if (!localBrain) return;
+  const svg = $("brain-svg");
+  const events = buildTrainingEvents(localBrain);
+  playTraining(svg, events, { interval: 300 });
+}
+
+function buildTrainingEvents(graph) {
+  const edges = graph.edges ?? [];
+  return edges.slice(0, 8).map((edge, index) => ({
+    edge: [edge.from, edge.to],
+    delta: index % 2 === 0 ? 0.08 : -0.04
+  }));
 }
 
 async function cacheBrainInSW(hash, bytesU8) {
@@ -159,8 +176,13 @@ function setupP2P() {
   p2p = new BrainP2P({
     log,
     onBrainReceived,
+    onDeltaReceived: (delta) => {
+      log(`[app] delta received (${delta.op})`);
+    },
     onOpen: () => {
       $("btnSendBrain").disabled = false;
+      const deltaButton = $("btnSendDelta");
+      if (deltaButton) deltaButton.disabled = false;
     }
   });
 
@@ -173,6 +195,8 @@ function setupP2P() {
   $("btnJoin").onclick = async () => {
     await p2p.join();
     $("btnSendBrain").disabled = true;
+    const deltaButton = $("btnSendDelta");
+    if (deltaButton) deltaButton.disabled = true;
   };
 
   $("btnSetRemote").onclick = async () => {
@@ -198,6 +222,13 @@ function setupP2P() {
     }
     await p2p.sendBrainBinary(localBytes);
   };
+
+  const deltaButton = $("btnSendDelta");
+  if (deltaButton) {
+    deltaButton.onclick = async () => {
+      p2p.sendDeltaEdge({ from: 1, to: 3, w: 0.99, lane: 1 });
+    };
+  }
 }
 
 async function sha256Hex(u8) {

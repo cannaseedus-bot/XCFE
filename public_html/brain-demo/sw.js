@@ -13,6 +13,7 @@ const ASSETS = [
   "/brain-demo/js/brain-proof.js",
   "/brain-demo/js/brain-federation.js",
   "/brain-demo/js/lane-heatmap.js",
+  "/brain-demo/js/training-timelapse.js",
   "/brain-demo/js/p2p.js",
   "/brain-demo/js/p2p-proto.js",
   "/brain-demo/wasm/scxq2_decoder.js",

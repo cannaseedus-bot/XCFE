@@ -1,0 +1,69 @@
+<svg width="960" height="420" viewBox="0 0 960 420"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+    .node {
+      fill:#020617;
+      stroke-width:3;
+    }
+    .edge {
+      stroke-width:3;
+      fill:none;
+      opacity:0.4;
+    }
+    .walk {
+      stroke-dasharray:6 6;
+      stroke-width:4;
+      fill:none;
+      opacity:1;
+    }
+    .label {
+      fill:#e6fffa;
+      font-family:monospace;
+      font-size:13px;
+      text-anchor:middle;
+    }
+    .lane0 { stroke:#00f5ff; }
+    .lane1 { stroke:#9c88ff; }
+    .lane2 { stroke:#16f2aa; }
+    .lane3 { stroke:#ffb703; }
+    .lane4 { stroke:#ffd166; }
+  </style>
+
+  <circle cx="160" cy="210" r="30" class="node lane0"/>
+  <circle cx="360" cy="120" r="30" class="node lane1"/>
+  <circle cx="360" cy="300" r="30" class="node lane2"/>
+  <circle cx="580" cy="210" r="35" class="node lane3"/>
+  <circle cx="800" cy="210" r="30" class="node lane4"/>
+
+  <text x="160" y="215" class="label">L0</text>
+  <text x="360" y="125" class="label">L1</text>
+  <text x="360" y="305" class="label">L2</text>
+  <text x="580" y="215" class="label">L3</text>
+  <text x="800" y="215" class="label">L4</text>
+
+  <path d="M190 210 L330 140" class="edge lane1"/>
+  <path d="M190 210 L330 280" class="edge lane2"/>
+  <path d="M390 140 L550 210" class="edge lane3"/>
+  <path d="M390 280 L550 210" class="edge lane3"/>
+  <path d="M615 210 L770 210" class="edge lane4"/>
+
+  <path d="M190 210 L330 140 L550 210 L770 210"
+        class="walk lane4">
+    <animate
+      attributeName="stroke-dashoffset"
+      from="48"
+      to="0"
+      dur="2.5s"
+      repeatCount="indefinite"/>
+  </path>
+
+  <text x="480" y="40" class="label" font-size="18">
+    Deterministic Graph Walk (Inference)
+  </text>
+
+  <text x="480" y="380" class="label">
+    SCXQ2 lanes → explicit storage → inspectable cognition
+  </text>
+
+</svg>

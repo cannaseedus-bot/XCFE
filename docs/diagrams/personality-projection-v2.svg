@@ -1,0 +1,36 @@
+<svg width="900" height="360" viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .core { fill:#0b1220; stroke:#16f2aa; stroke-width:3; rx:12; }
+    .proj { fill:#020617; stroke:#9c88ff; stroke-width:2; rx:10; }
+    .text { fill:#e6fffa; font-family:Inter, monospace; font-size:14px; text-anchor:middle; }
+    .label { fill:#7dd3fc; font-size:12px; }
+    .arrow { stroke:#7dd3fc; stroke-width:2; marker-end:url(#arrow); }
+  </style>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#7dd3fc"/>
+    </marker>
+  </defs>
+
+  <rect x="340" y="140" width="220" height="90" class="core"/>
+  <text x="450" y="180" class="text">INFERENCE CORE</text>
+  <text x="450" y="200" class="label">(unchanged)</text>
+
+  <rect x="120" y="60" width="200" height="70" class="proj"/>
+  <text x="220" y="100" class="text">Neutral</text>
+
+  <rect x="120" y="230" width="200" height="70" class="proj"/>
+  <text x="220" y="270" class="text">Tyson</text>
+
+  <rect x="620" y="145" width="200" height="70" class="proj"/>
+  <text x="720" y="185" class="text">Chomsky</text>
+
+  <line x1="340" y1="170" x2="320" y2="110" class="arrow"/>
+  <line x1="340" y1="210" x2="320" y2="260" class="arrow"/>
+  <line x1="560" y1="185" x2="620" y2="185" class="arrow"/>
+
+  <text x="450" y="40" class="text" font-size="18">
+    Expression ≠ Cognition
+  </text>
+</svg>

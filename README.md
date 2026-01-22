@@ -43,6 +43,11 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [KGB-ZK-2 (Recursive Aggregation)](#kgb-zk-2-recursive-aggregation)
 - [KGB-ZK-2 Solidity Verifier](#kgb-zk-2-solidity-verifier)
 - [Brain Registry + Merge Spec](#brain-registry--merge-spec)
+- [Full Brain Sync + Explicit Merge](#full-brain-sync--explicit-merge)
+- [Supgram Spec v1](#supgram-spec-v1)
+- [SCXQ2 Target Legality Matrix v1](#scxq2-target-legality-matrix-v1)
+- [Training Event → Edge Mutation Simulator](#training-event--edge-mutation-simulator)
+- [Gram → SCXQ2 Lane Mapping v1](#gram--scxq2-lane-mapping-v1)
 - [CLI Reference (Full Help Output)](#cli-reference-full-help-output)
 - [Why This Matters](#why-this-matters)
 - [Decision: Rust-first, WASM-capable, Python bindings optional](#decision-rust-first-wasm-capable-python-bindings-optional)
@@ -222,6 +227,40 @@ The on-chain verifier interface and Solidity outline for KGB-ZK-2 lives at
 
 The canonical on-chain registry ABI and paper-grade merge specification live at
 `specs/brain-registry-merge-spec.md`.
+
+---
+
+## Full Brain Sync + Explicit Merge
+
+Full-brain federation transport and the explicit merge tool are specified in
+`specs/brain-full-sync-merge.md`.
+
+---
+
+## Supgram Spec v1
+
+The frozen supgram formation and decay rules live at `specs/supgram-spec-v1.md`.
+
+---
+
+## SCXQ2 Target Legality Matrix v1
+
+The frozen inference legality matrix is defined in
+`specs/scxq2-target-legality-matrix-v1.md`.
+
+---
+
+## Training Event → Edge Mutation Simulator
+
+The reference training event mutation rules live at
+`specs/training-event-edge-mutation-simulator.md`.
+
+---
+
+## Gram → SCXQ2 Lane Mapping v1
+
+The canonical gram-to-lane mapping is frozen in
+`specs/gram-lane-mapping-v1.md`.
 
 ---
 
