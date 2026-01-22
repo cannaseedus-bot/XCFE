@@ -8,9 +8,10 @@ const ICE = {
 };
 
 export class BrainP2P {
-  constructor({ log, onBrainReceived, onOpen }) {
+  constructor({ log, onBrainReceived, onDeltaReceived, onOpen }) {
     this.log = log;
     this.onBrainReceived = onBrainReceived;
+    this.onDeltaReceived = onDeltaReceived;
     this.onOpen = onOpen;
 
     this.pc = null;
@@ -140,6 +141,11 @@ export class BrainP2P {
     this._l("[p2p] Brain send complete");
   }
 
+  sendDeltaEdge({ from, to, w, lane = 1 }) {
+    const ts = Date.now();
+    this.sendJSON({ t: PROTO.DELTA, op: "edge_upsert", from, to, w, lane, ts });
+  }
+
   async _handleJSON(msg) {
     switch (msg.t) {
       case PROTO.HELLO:
@@ -159,6 +165,11 @@ export class BrainP2P {
 
       case PROTO.BRAIN_DONE:
         this._l(`[p2p] brain transfer done marker: ${msg.hash}`);
+        break;
+
+      case PROTO.DELTA:
+        this._l(`[p2p] delta: ${msg.op} ${msg.from}->${msg.to} w=${msg.w}`);
+        this.onDeltaReceived?.(msg);
         break;
 
       default:

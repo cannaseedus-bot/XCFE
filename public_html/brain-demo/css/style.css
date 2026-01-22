@@ -17,6 +17,28 @@ body {
   gap: 28px;
 }
 
+.install-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  background: #16f2aa;
+  color: #07120f;
+  border-radius: 999px;
+  padding: 12px 18px;
+  box-shadow: 0 12px 30px rgba(22, 242, 170, 0.25);
+}
+
+@media (display-mode: standalone) {
+  header::after {
+    content: "INSTALLED";
+    color: #16f2aa;
+    margin-left: 12px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+}
+
 header h1 {
   margin: 0 0 8px;
   font-size: 28px;
@@ -102,6 +124,41 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.p2p-note {
+  margin: 0;
+  color: #9fa6c7;
+}
+
+.registry {
+  background: #0f1322;
+  border: 1px solid #22304a;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.registry #registryStatus {
+  color: #a7b0d8;
+}
+
+.registry pre {
+  background: #0b0f1d;
+  border: 1px solid #1c2440;
+  padding: 16px;
+  border-radius: 12px;
+  min-height: 100px;
+  white-space: pre-wrap;
+  color: #b9c7ff;
+}
+
+.registry .row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .p2p .row {

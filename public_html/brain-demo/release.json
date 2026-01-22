@@ -1,0 +1,23 @@
+{
+  "channel": "stable",
+  "version": "1.0.0",
+  "build": "2026-01-21",
+  "sw": "/brain-demo/sw.js",
+  "assets": [
+    "/brain-demo/",
+    "/brain-demo/index.html",
+    "/brain-demo/manifest.webmanifest",
+    "/brain-demo/css/style.css",
+    "/brain-demo/js/app.js",
+    "/brain-demo/js/brain-runtime.js",
+    "/brain-demo/js/brain-visualizer.js",
+    "/brain-demo/js/brain-proof.js",
+    "/brain-demo/js/brain-federation.js",
+    "/brain-demo/js/lane-heatmap.js",
+    "/brain-demo/js/training-timelapse.js",
+    "/brain-demo/js/p2p.js",
+    "/brain-demo/js/p2p-proto.js",
+    "/brain-demo/wasm/scxq2_decoder.js"
+  ],
+  "hash": "blake3:placeholder"
+}

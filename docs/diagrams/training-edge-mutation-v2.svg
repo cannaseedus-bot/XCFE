@@ -1,0 +1,27 @@
+<svg width="900" height="360" viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .node { fill:#0b1220; stroke:#ff6b6b; stroke-width:2; }
+    .edge { stroke:#ff6b6b; stroke-width:2; }
+    .edge2 { stroke:#16f2aa; stroke-width:3; }
+    .text { fill:#e6fffa; font-family:Inter, monospace; font-size:13px; text-anchor:middle; }
+    .label { fill:#7dd3fc; font-size:12px; }
+  </style>
+
+  <circle cx="300" cy="180" r="30" class="node"/>
+  <circle cx="500" cy="180" r="30" class="node"/>
+
+  <line x1="330" y1="180" x2="470" y2="180" class="edge"/>
+
+  <text x="400" y="160" class="label">before</text>
+
+  <line x1="330" y1="200" x2="470" y2="200" class="edge2"/>
+
+  <text x="400" y="230" class="label">after (reinforced)</text>
+
+  <text x="300" y="185" class="text">@gram:X</text>
+  <text x="500" y="185" class="text">@gram:Y</text>
+
+  <text x="450" y="60" class="text" font-size="18">
+    Learning is edge-weight adjustment
+  </text>
+</svg>

@@ -39,6 +39,16 @@ This repository defines the **language**, **execution law**, and **binary substr
 - [License](#license)
 - [Final Note](#final-note)
 - [Browser Demo (Screenshots)](#browser-demo-screenshots)
+- [Desktop Packaging (Tauri)](#desktop-packaging-tauri)
+- [KUHUL-CORE v1 (Locked)](#kuhul-core-v1-locked)
+- [KGB-ZK-2 (Recursive Aggregation)](#kgb-zk-2-recursive-aggregation)
+- [KGB-ZK-2 Solidity Verifier](#kgb-zk-2-solidity-verifier)
+- [Brain Registry + Merge Spec](#brain-registry--merge-spec)
+- [Full Brain Sync + Explicit Merge](#full-brain-sync--explicit-merge)
+- [Supgram Spec v1](#supgram-spec-v1)
+- [SCXQ2 Target Legality Matrix v1](#scxq2-target-legality-matrix-v1)
+- [Training Event → Edge Mutation Simulator](#training-event--edge-mutation-simulator)
+- [Gram → SCXQ2 Lane Mapping v1](#gram--scxq2-lane-mapping-v1)
 - [CLI Reference (Full Help Output)](#cli-reference-full-help-output)
 - [Why This Matters](#why-this-matters)
 - [Decision: Rust-first, WASM-capable, Python bindings optional](#decision-rust-first-wasm-capable-python-bindings-optional)
@@ -171,12 +181,87 @@ Execution is governed by **XCFE**, the XJSON Control & Flow Execution law.
 XJSON        → executable program
 XCFE         → execution law (deterministic semantics)
 SCXQ2        → binary encoding (lanes, no JSON at runtime)
+SCX-GLYPH-1  → canonical glyph wire format (SCX v3 / KUHUL)
 Brain        → compiled executable artifact (brain.scxq2.bin)
 ```
+
+Canonical glyph encoding details live in `docs/scx-glyph-spec.md`.
 
 ---
 
 Browser demos do **not** require installation.
+
+---
+
+## Desktop Packaging (Tauri)
+
+The XJSON Brain IDE can be wrapped as a native desktop app using Tauri for auto-update,
+tray/background mode, and installer workflows. See the guide in
+`docs/desktop-tauri.md`. The repository does **not** store binary icon files; follow
+`docs/desktop-assets/README.md` to create the required `.icns` and `.ico` assets locally
+when packaging desktop builds.
+
+---
+
+## KUHUL-CORE v1 (Locked)
+
+The canonical KUHUL core specification (interpreter, inference walk, learning, and merge
+rules) lives at `specs/kuhul-core-v1.md`.
+
+---
+
+## KGB-ZK-2 (Recursive Aggregation)
+
+Recursive proof aggregation for KUHUL inference legality is specified in
+`specs/kgb-zk-2-recursive-aggregation.md`.
+
+---
+
+## KGB-ZK-2 Solidity Verifier
+
+The on-chain verifier interface and Solidity outline for KGB-ZK-2 lives at
+`specs/kgb-zk-2-solidity-verifier.md`.
+
+---
+
+## Brain Registry + Merge Spec
+
+The canonical on-chain registry ABI and paper-grade merge specification live at
+`specs/brain-registry-merge-spec.md`.
+
+---
+
+## Full Brain Sync + Explicit Merge
+
+Full-brain federation transport and the explicit merge tool are specified in
+`specs/brain-full-sync-merge.md`.
+
+---
+
+## Supgram Spec v1
+
+The frozen supgram formation and decay rules live at `specs/supgram-spec-v1.md`.
+
+---
+
+## SCXQ2 Target Legality Matrix v1
+
+The frozen inference legality matrix is defined in
+`specs/scxq2-target-legality-matrix-v1.md`.
+
+---
+
+## Training Event → Edge Mutation Simulator
+
+The reference training event mutation rules live at
+`specs/training-event-edge-mutation-simulator.md`.
+
+---
+
+## Gram → SCXQ2 Lane Mapping v1
+
+The canonical gram-to-lane mapping is frozen in
+`specs/gram-lane-mapping-v1.md`.
 
 ---
 
@@ -655,6 +740,7 @@ This repository defines:
 * federation semantics
 * proof model
 * reference tooling
+* runtime bundle reference (see [docs/xjson-runtime-bundle.md](docs/xjson-runtime-bundle.md))
 
 It does **not** ship pretrained brains.
 
