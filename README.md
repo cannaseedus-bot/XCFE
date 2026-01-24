@@ -182,25 +182,8 @@ Execution is governed by **XCFE**, the XJSON Control & Flow Execution law.
 XJSON        → executable program
 XCFE         → execution law (deterministic semantics)
 SCXQ2        → binary encoding (lanes, no JSON at runtime)
-SCX-GLYPH-1  → canonical glyph wire format (SCX v3 / KUHUL)
 Brain        → compiled executable artifact (brain.scxq2.bin)
 ```
-
-Canonical glyph encoding details live in `docs/scx-glyph-spec.md`.
-
----
-
-Browser demos do **not** require installation.
-
----
-
-## Desktop Packaging (Tauri)
-
-The XJSON Brain IDE can be wrapped as a native desktop app using Tauri for auto-update,
-tray/background mode, and installer workflows. See the guide in
-`docs/desktop-tauri.md`. The repository does **not** store binary icon files; follow
-`docs/desktop-assets/README.md` to create the required `.icns` and `.ico` assets locally
-when packaging desktop builds.
 
 ---
 
@@ -312,53 +295,19 @@ Recursive proof aggregation for KUHUL inference legality is specified in
 
 ---
 
-## KGB-ZK-2 Solidity Verifier
-
-The on-chain verifier interface and Solidity outline for KGB-ZK-2 lives at
-`specs/kgb-zk-2-solidity-verifier.md`.
+Browser demos do **not** require installation.
 
 ---
 
-## Brain Registry + Merge Spec
+This section shows the **end-to-end lifecycle** of an XJSON brain:
 
-The canonical on-chain registry ABI and paper-grade merge specification live at
-`specs/brain-registry-merge-spec.md`.
+1. build a brain from data
+2. run inference (graph walk)
+3. inspect / prove execution
+4. merge brains
+5. register on-chain
 
----
-
-## Full Brain Sync + Explicit Merge
-
-Full-brain federation transport and the explicit merge tool are specified in
-`specs/brain-full-sync-merge.md`.
-
----
-
-## Supgram Spec v1
-
-The frozen supgram formation and decay rules live at `specs/supgram-spec-v1.md`.
-
----
-
-## SCXQ2 Target Legality Matrix v1
-
-The frozen inference legality matrix is defined in
-`specs/scxq2-target-legality-matrix-v1.md`.
-
----
-
-## Training Event → Edge Mutation Simulator
-
-The reference training event mutation rules live at
-`specs/training-event-edge-mutation-simulator.md`.
-
----
-
-## Gram → SCXQ2 Lane Mapping v1
-
-The canonical gram-to-lane mapping is frozen in
-`specs/gram-lane-mapping-v1.md`.
-
----
+No embeddings. No tensors. No GPU.
 
 This section shows the **end-to-end lifecycle** of an XJSON brain:
 
@@ -378,6 +327,7 @@ Node (reference CLI):
 
 ```bash
 npm install -g @xjson/brain
+```
 ```
 Brain Hash: 0x8f3c…
 Grams:      412,903
@@ -455,6 +405,8 @@ Path Hash:  0x9a17…
 Legal:      true
 Steps:      17
 ```
+Answer:
+Quantum tunneling is the phenomenon where…
 
 Inference is a **deterministic graph traversal**, not sampling.
 
@@ -753,24 +705,6 @@ Brains are registered **by hash only**:
 ```
 brainHash = SHA256(brain.scxq2.bin)
 ```
-brainHash = SHA256(brain.scxq2.bin)
-```
-
-The chain stores:
-
-* identity
-* authorship
-* timestamp
-* merge lineage
-
-The chain never stores cognition.
-
-The chain stores:
-
-* identity
-* authorship
-* timestamp
-* merge lineage
 
 The chain stores:
 
@@ -835,19 +769,8 @@ This repository defines:
 * federation semantics
 * proof model
 * reference tooling
-* runtime bundle reference (see [docs/xjson-runtime-bundle.md](docs/xjson-runtime-bundle.md))
 
 It does **not** ship pretrained brains.
-
----
-
-## Specs and Demo Assets
-
-The `docs/` directory includes canonical references and artifacts:
-
-* Prompt Tape v1 specification: `docs/prompt-tape-v1.md`
-* Demo brain artifact: `docs/demo.brain.json`
-* Paper assets and figures: `docs/paper-assets.md` and `docs/figures/`
 
 ---
 
@@ -4614,106 +4537,3 @@ If you want to continue:
 5. Generate **public CLI docs for cli.xjson.app**
 
 Say the number — we finish it cleanly.
-
----
-
-# XJSON CLI — Quick Start (cli.xjson.app)
-
-**Install**
-
-```bash
-# macOS / Linux
-curl -fsSL https://cli.xjson.app/install.sh | sh
-
-# Windows
-irm https://cli.xjson.app/install.ps1 | iex
-
-# Or Python
-pip install xjson
-```
-
-**Launch (from your project folder)**
-
-```bash
-xjson
-```
-
-XJSON uses the **current directory** as the project context.
-
----
-
-## Commands
-
-### Discover & Diagnose
-
-```bash
-xjson doctor
-xjson models
-xjson models info phi3
-```
-
-### Build & Index
-
-```bash
-xjson index ./src
-xjson build ./data
-```
-
-### Inference
-
-```bash
-xjson infer "Explain entropy"
-xjson infer "Explain entropy" --via phi3
-xjson infer "Explain entropy" --via phi3,llama --consensus
-```
-
-### Consensus
-
-```bash
-xjson consensus show
-xjson ingest consensus
-```
-
-### Benchmark
-
-```bash
-xjson bench --prompt "Explain entropy" --via phi3,llama
-```
-
-### Serve (Browser Demo)
-
-```bash
-xjson serve
-```
-
----
-
-## Project Structure
-
-```
-project/
-├── src/
-├── models/
-│   ├── phi-3-instruct/
-│   └── llama.gguf
-└── .xjson/
-    ├── brain.scxq2.bin
-    └── diffs/
-```
-
-Additional tooling and fixtures in this repository:
-
-* `tools/eslint-plugin-asx/` — ESLint rules for ASX envelopes (effects, import hash binding, transitive checks).
-* `tools/vscode-asx/` — VSCode diagnostics extension for ASX envelopes.
-* `tests/golden/` — deterministic lint/verifier golden vectors.
-* `codex/lex/` and `codex/mx2lex/` — MX2LEX grammar, pack, oracle, and scoring fixtures.
-
----
-
-## Design Guarantees
-
-* Deterministic graph-walk inference
-* External models are **suggestion oracles**
-* Learning is **explicit**
-* Consensus is **inspectable**
-* Everything is **replayable**
