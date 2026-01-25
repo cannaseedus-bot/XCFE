@@ -100,6 +100,100 @@ seed → graph walk → opseq → tensor read → score
 
 ---
 
+## 🔹 KUHUL: Native Tensor Model (Important Clarification)
+
+**KUHUL is not only an execution engine.
+KUHUL is XJSON’s first native tensor model.**
+
+Unlike traditional models that store tensors in opaque weight files, **KUHUL represents tensors directly as first-class glyphs in the SCXQ2 binary format**.
+
+### What this means:
+
+* Tensors are **explicit objects**, not hidden parameters
+* Tensor shapes, scales, and values are **inspectable**
+* Tensor access is **deterministic**
+* Tensor usage is **provable**
+* Tensor operations are **bytecode-driven**, not implicit
+
+---
+
+## KUHUL Tensor Glyphs
+
+KUHUL introduces a **tensor glyph** as a primitive:
+
+* Quantized INT8 tensors
+* Explicit shape + scale
+* Lane-addressable
+* SIMD-friendly
+* ZK-friendly
+
+These tensor glyphs are:
+
+* Loaded directly by the KUHUL VM
+* Read during graph walks
+* Used by OPSEQ bytecode
+* Included in proof constraints
+
+There is **no separate “model file”**.
+
+> **The brain *is* the model.**
+
+---
+
+## How KUHUL Differs from Traditional Models
+
+| Traditional LLM       | KUHUL                     |
+| --------------------- | ------------------------- |
+| Hidden weights        | Explicit tensor glyphs    |
+| Floating-point noise  | Quantized, deterministic  |
+| Attention layers      | Graph walks               |
+| Implicit ops          | Bytecode OPSEQ            |
+| Unprovable inference  | ZK-verifiable             |
+| Offline training only | Online prompt compilation |
+
+KUHUL is therefore best understood as:
+
+> **A tensor-aware graph reasoning model whose parameters are stored as executable glyphs.**
+
+---
+
+## KUHUL in the XJSON Stack
+
+```
+Prompt Tapes
+   ↓
+N-grams / Supgrams
+   ↓
+Graph Edges
+   ↓
+KUHUL Tensor Glyphs
+   ↓
+OPSEQ Bytecode
+   ↓
+Deterministic Inference
+   ↓
+ZK Proof
+```
+
+KUHUL is **the reference model architecture** for XJSON.
+
+Future models (vision, multimodal, physics, agents) will **extend KUHUL**, not replace it.
+
+---
+
+## One-Sentence Canonical Definition (Use This Everywhere)
+
+> **KUHUL is XJSON’s first native tensor model, storing quantized tensors as executable glyphs inside a deterministic, proof-carrying graph inference system.**
+
+This sentence is:
+
+* accurate
+* defensible
+* non-marketing
+* technically precise
+
+---
+
 ### 5. Proof-Carrying Inference (KGB-ZK)
 
 Every inference can emit a **zero-knowledge proof** that:
