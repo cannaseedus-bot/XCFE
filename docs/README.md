@@ -19,6 +19,7 @@ If you're new to XJSON, start here:
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | System architecture deep dive |
 | [xjson-runtime-bundle.md](./xjson-runtime-bundle.md) | Runtime bundling and deployment |
 | [desktop-tauri.md](./desktop-tauri.md) | Desktop app packaging with Tauri |
+| [matrix-binary-ingest.md](./matrix-binary-ingest.md) | Binary ingest pipeline for ATOMIC-DOM |
 
 ### Proof System (KGB)
 
