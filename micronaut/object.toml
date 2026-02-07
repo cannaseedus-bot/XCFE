@@ -1,0 +1,20 @@
+name = "micronaut"
+format = "SCO/1"
+profile = "SCXQ7"
+orchestrator = "powershell"
+object = "micronaut.s7"
+semantics = "semantics.xjson"
+brains_dir = "brains"
+chat = "io/chat.txt"
+stream = "io/stream.txt"
+trace = "trace/scxq2.trace"
+proof = "proof/scxq2.proof"
+
+[lifecycle]
+states = ["INIT", "READY", "RUNNING", "IDLE", "HALT"]
+
+[loopback]
+chat_post = "POST /chat -> append io/chat.txt"
+stream_get = "GET /stream -> read io/stream.txt"
+status_get = "GET /status -> read object state"
+snapshot_post = "POST /snapshot -> rotate io/snapshot"

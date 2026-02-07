@@ -1,0 +1,14 @@
+SCO/1: micr/s7
+name: micronaut
+profile: scxq7
+mode: sealed
+io: file-bound
+
+ops:
+  - cm1_verify
+  - kuhul_tsg
+  - scxq2_infer
+
+notes:
+  - This object is a sealed executable data projection.
+  - All authority remains internal to the object boundary.

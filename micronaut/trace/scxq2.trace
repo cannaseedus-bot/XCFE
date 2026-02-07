@@ -1,0 +1,2 @@
+state: INIT
+notes: trace is append-only and sealed on HALT

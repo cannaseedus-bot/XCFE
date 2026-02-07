@@ -1,0 +1,12 @@
+{
+  "schema": "KUHUL-TSG",
+  "version": "1.0",
+  "intent": "scxq2",
+  "description": "Sealed semantic topology for Micronaut SCO/1 projection.",
+  "nodes": [],
+  "edges": [],
+  "constraints": {
+    "cm1": "payloads must be UTF-8 and append-only",
+    "authority": "projection-only; no host reasoning"
+  }
+}
