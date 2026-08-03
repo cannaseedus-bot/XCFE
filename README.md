@@ -1,10 +1,10 @@
-# XJSON
+# XCFE
 
 **Executable intelligence as a single, auditable file.**
 
 XJSON is a language and runtime for building AI systems that are transparent, deterministic, and verifiable. Unlike traditional neural networks with opaque weights, XJSON represents intelligence as explicit graph structures that can be inspected, diffed, and proven correct.
 
-## Why XJSON?
+## Why XCFE?
 
 | Traditional AI | XJSON |
 |----------------|-------|
