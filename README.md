@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/cannaseedus-bot/XCFE/2e73dfde1c2f2ec36eaec35c6ab143e81454c528/xjson-logo.svg" />
+
 # XCFE
 
 **Executable intelligence as a single, auditable file.**
