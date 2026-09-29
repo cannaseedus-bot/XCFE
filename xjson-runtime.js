@@ -16,7 +16,7 @@
 // ============================================================================
 
 const DEFAULT_CONFIG = {
-  baseUrl: "http://localhost:8080",
+  baseUrl: "http://localhost:9080",
   authUrl: "http://localhost:8787",
   timeout: 30000,
   retries: 3,
